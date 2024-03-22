@@ -1,12 +1,29 @@
 var canvas = document.querySelector("#gl-canvas")
 var container = document.getElementById("canvas-container");
 var gl = canvas.getContext("webgl");
+var shapeRadios = document.querySelectorAll('input[name="shape"]');
+var selectedShape;
+var linePositions = [];
+
 if (!gl){
     console.error("Unable to initialize WebGL.")
 }
 else{
     console.log("Initialize successfull.")
 }
+
+// Update selected shape
+shapeRadios.forEach(function(radio) {
+    radio.addEventListener('change', function() {
+        if (radio.checked) {
+            selectedShape = radio.value;
+            console.log("Shape yang terpilih:", selectedShape);
+            while (true){
+              lineProcess();
+            }
+        }
+    });
+});
 
 function createShader(gl, type, source) {
     var shader = gl.createShader(type);
@@ -55,46 +72,73 @@ var positionBuffer = gl.createBuffer();
 // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
 gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 
-var positions = [
-  0, 0,
-  0, 0.5,
-  0.7, 0,
-  1,1,
-];
-gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+var coord1 = null;
+var coord2 = null;
 
-// code above this line is initialization code.
-// code below this line is rendering code.
+function lineListener(){
+  canvas.addEventListener('click', function(event) {
+    var xPixel = event.clientX - canvas.getBoundingClientRect().left;
+    var yPixel = event.clientY - canvas.getBoundingClientRect().top;
 
-// webglUtils.resizeCanvasToDisplaySize(gl.canvas);
+    var xClip = (xPixel / canvas.width) * 2 - 1;
+    var yClip = ((canvas.height - yPixel) / canvas.height) * 2 - 1;
 
-// Tell WebGL how to convert from clip space to pixels
-gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+    if (coord1 === null) {
+        coord1 = [xClip, yClip];
+        console.log("Koordinat pertama:", coord1);
+    } 
 
-// Clear the canvas
-gl.clearColor(0, 0, 0, 0);
-gl.clear(gl.COLOR_BUFFER_BIT);
+    else {
+        coord2 = [xClip, yClip];
+        console.log("Koordinat kedua:", coord2);
 
-// Tell it to use our program (pair of shaders)
-gl.useProgram(program);
+        drawLine(coord1, coord2)
+            .then(function() {``
+                coord1 = null;
+                coord2 = null;
+            });
+    }
+});
+}
 
-// Turn on the attribute
-gl.enableVertexAttribArray(positionAttributeLocation);
+function drawLine(coord1, coord2) {
+    return new Promise(function(resolve, reject) {
+        var checkCoord2 = setInterval(function() {
+            if (coord2 !== null) {
+                
+                clearInterval(checkCoord2);
 
-// Bind the position buffer.
-gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+                var positions = [
+                    coord1[0], coord1[1],
+                    coord2[0], coord2[1]
+                ];
 
-// Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
-var size = 2;          // 2 components per iteration
-var type = gl.FLOAT;   // the data is 32bit floats
-var normalize = false; // don't normalize the data
-var stride = 0;        // 0 = move forward size * sizeof(type) each iteration to get the next position
-var offset = 0;        // start at the beginning of the buffer
-gl.vertexAttribPointer(
-    positionAttributeLocation, size, type, normalize, stride, offset);
+                linePositions.push(coord1[0], coord1[1], coord2[0], coord2[1]);
 
-// draw
-var primitiveType = gl.TRIANGLES;
-var offset = 0;
-var count = 3;
-gl.drawArrays(primitiveType, offset, count);
+            // Transfer data koordinat ke buffer WebGL
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+
+            // Draw
+            gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+            gl.clearColor(0, 0, 0, 0);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+            gl.useProgram(program);
+            gl.enableVertexAttribArray(positionAttributeLocation);
+            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+            var size = 2;
+            var type = gl.FLOAT;
+            var normalize = false;
+            var stride = 0;
+            var offset = 0;
+            gl.vertexAttribPointer(positionAttributeLocation, size, type, normalize, stride, offset);
+            var primitiveType = gl.LINES;
+            var count = positions.length / 2; // Hitung jumlah vertex
+            gl.drawArrays(primitiveType, offset, count);
+
+            resolve();
+            }
+        }, 100);
+    });
+}
+
+lineListener();
