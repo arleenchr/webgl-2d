@@ -3,10 +3,7 @@ var container = document.getElementById("canvas-container");
 var gl = canvas.getContext("webgl");
 var shapeRadios = document.querySelectorAll('input[name="shape"]');
 var selectedShape;
-// semua posisi line
-var linePositions = [];
-// vertex yang tercatat, jika sudah 2 akan dipush ke linePositions dan currentLine dihapus
-var currentLine = [];
+var clearCanvasButton = document.getElementById("clear-canvas-button");
 
 if (!gl){
     console.error("Unable to initialize WebGL.")
@@ -15,14 +12,20 @@ else{
     console.log("Initialize successfull.")
 }
 
+clearCanvasButton.addEventListener("click", function(){
+  gl.clearColor(0, 0, 0, 0);
+  gl.clear(gl.COLOR_BUFFER_BIT);
+  linePositions = [];
+});
+
 // Update selected shape
 shapeRadios.forEach(function(radio) {
     radio.addEventListener('change', function() {
         if (radio.checked) {
             selectedShape = radio.value;
             console.log("Shape yang terpilih:", selectedShape);
-            while (true){
-              lineProcess();
+            if (selectedShape == "line"){
+              lineListener(gl, program, positionAttributeLocation, positionBuffer);
             }
         }
     });
@@ -74,54 +77,3 @@ var positionBuffer = gl.createBuffer();
 
 // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
 gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-
-var coord1 = null;
-var coord2 = null;
-
-function lineListener(){
-  canvas.addEventListener('click', function(event) {
-    var xPixel = event.clientX - canvas.getBoundingClientRect().left;
-    var yPixel = event.clientY - canvas.getBoundingClientRect().top;
-
-    var xClip = (xPixel / canvas.width) * 2 - 1;
-    var yClip = ((canvas.height - yPixel) / canvas.height) * 2 - 1;
-
-    currentLine.push(xClip, yClip);
-
-    if (currentLine.length == 4){
-      linePositions.push(currentLine);
-      currentLine = [];
-    }
-    console.log(linePositions);
-    linePositions.forEach(function(element) {
-      console.log(element);
-      drawLine(element);
-  });
-});
-}
-
-function drawLine(coords){
-  var positions = [
-  coords[0], coords[1],
-  coords[2], coords[3],
-  ];
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
-
-  // Draw
-  gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-  // gl.clearColor(0, 0, 0, 0);
-  // gl.clear(gl.COLOR_BUFFER_BIT);
-  gl.useProgram(program);
-  gl.enableVertexAttribArray(positionAttributeLocation);
-  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-  var size = 2;
-  var type = gl.FLOAT;
-  var normalize = false;
-  var stride = 0;
-  var offset = 0;
-  gl.vertexAttribPointer(positionAttributeLocation, size, type, normalize, stride, offset);
-  var primitiveType = gl.LINES;
-  var count = 2;
-  gl.drawArrays(primitiveType, offset, count);
-}
-lineListener();
