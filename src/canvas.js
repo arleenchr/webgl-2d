@@ -12,6 +12,16 @@ else{
     console.log("Initialize successfull.")
 }
 
+var currX, currY;
+canvas.addEventListener('mousemove', function(event) {
+  var rect = canvas.getBoundingClientRect();
+  var xPixel = event.clientX - rect.left;
+  var yPixel = event.clientY - rect.top;
+
+  currX = (xPixel / canvas.width) * 2 - 1;
+  currY = ((canvas.height - yPixel) / canvas.height) * 2 - 1;
+});
+
 clearCanvasButton.addEventListener("click", function(){
   gl.clearColor(0, 0, 0, 0);
   gl.clear(gl.COLOR_BUFFER_BIT);

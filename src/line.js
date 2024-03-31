@@ -5,26 +5,30 @@ var linePositions = [];
 var currentLine = [];
 
 function lineListener(){
-    canvas.addEventListener('click', function(event) {
-      var xPixel = event.clientX - canvas.getBoundingClientRect().left;
-      var yPixel = event.clientY - canvas.getBoundingClientRect().top;
-  
-      var xClip = (xPixel / canvas.width) * 2 - 1;
-      var yClip = ((canvas.height - yPixel) / canvas.height) * 2 - 1;
-  
-      currentLine.push(xClip, yClip);
-  
-      if (currentLine.length == 4){
-        linePositions.push(currentLine);
-        currentLine = [];
-      }
-      console.log(linePositions);
-      linePositions.forEach(function(gl, program, positionAttributeLocation, positionBuffer,element) {
-        console.log(element);
-        drawLine(gl, program, positionAttributeLocation, positionBuffer,element);
+  canvas.addEventListener('click', function() {
+    currentLine.push(currX, currY);
+    if (currentLine.length == 4){
+      canvas.removeEventListener('mousemove', mouseMoveHandler);
+      linePositions.push(currentLine);
+      currentLine = [];
+      linePositions.forEach(function(element) {
+        drawLine(element);
     });
-  });
-  }
+    }
+    else{
+      canvas.addEventListener('mousemove', mouseMoveHandler);
+    }
+});
+}
+
+function mouseMoveHandler(event) {
+  linePositions.forEach(function(element) {
+    drawLine(element);
+});
+  var temp = [currentLine[0], currentLine[1], currX, currY];
+  drawLine(temp);
+}
+
   
   function drawLine(coords){
     var positions = [
