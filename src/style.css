@@ -58,6 +58,17 @@
     width: 5vh;
 }
 
+.color-picker-container{
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 1rem;
+    color: white;
+}
+
+.color-picker-label{
+    margin-right: 1.5vh;
+}
+
 .delete-container{
     display: flex;
     flex-direction: column;
