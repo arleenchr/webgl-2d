@@ -42,6 +42,7 @@ shapeRadios.forEach(function(radio) {
 });
 
 function createShader(gl, type, source) {
+    // vertex shader source code
     var shader = gl.createShader(type);
     gl.shaderSource(shader, source);
     gl.compileShader(shader);
@@ -69,8 +70,15 @@ function createProgram(gl, vertexShader, fragmentShader) {
 }
 
 // Get the strings for our GLSL shaders
-var vertexShaderSource = document.querySelector("#vertex-shader-2d").text;
-var fragmentShaderSource = document.querySelector("#fragment-shader-2d").text;
+var vertexShaderSource = 
+'attribute vec3 coordinates;\n' +
+'void main(void) {\n' +
+   ' gl_Position = vec4(coordinates, 1.0);\n' +
+   'gl_PointSize = 10.0;\n'+
+'}';
+var fragmentShaderSource = 'void main(void) {\n' +
+' gl_FragColor = vec4(1, 0, 0.5, 1);\n' +
+'}';
 
 // create GLSL shaders, upload the GLSL source, compile the shaders
 var vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
@@ -80,10 +88,47 @@ var fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
 var program = createProgram(gl, vertexShader, fragmentShader);
 
 // look up where the vertex data needs to go.
-var positionAttributeLocation = gl.getAttribLocation(program, "a_position");
+var positionAttributeLocation = gl.getAttribLocation(program, "coordinates");
 
 // Create a buffer and put three 2d clip space points in it
 var positionBuffer = gl.createBuffer();
 
 // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
 gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+
+function findClosestPointIndex(x, y) {
+  var closestIndex = -1;
+  var closestDistance = Infinity;
+
+  for (var i = 0; i < linePositions.length; i++) {
+      var distance = Math.sqrt((x - linePositions[i][0]) ** 2 + (y - linePositions[i][1]) ** 2);
+      if (distance < closestDistance) {
+          closestDistance = distance;
+          closestIndex = i;
+      }
+  }
+
+  return closestIndex;
+}
+
+function onMouseDown(event) {
+  // Convert mouse coordinates to WebGL coordinates
+  var rect = canvas.getBoundingClientRect();
+  var xPixel = event.clientX - rect.left;
+  var yPixel = event.clientY - rect.top;
+  var x = (xPixel / canvas.width) * 2 - 1;
+  var y = ((canvas.height - yPixel) / canvas.height) * 2 - 1;
+
+  // Find the closest point to the mouse click
+  selectedPointIndex = findClosestPointIndex(x, y);
+
+  if (selectedPointIndex !== -1) {
+      isDragging = true;
+      
+      // Print coordinates and index
+      console.log("Clicked point index:", selectedPointIndex);
+      console.log("Coordinates:", linePositions[selectedPointIndex]);
+  }
+}
+
+canvas.addEventListener('mousedown', onMouseDown);
