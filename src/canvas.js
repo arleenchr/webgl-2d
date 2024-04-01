@@ -1,9 +1,20 @@
 var canvas = document.querySelector("#gl-canvas")
 var container = document.getElementById("canvas-container");
 var gl = canvas.getContext("webgl");
-var shapeRadios = document.querySelectorAll('input[name="shape"]');
-var selectedShape;
+
+// HTML element
+var selectionToolButton = document.getElementById("select-tool-button");
 var clearCanvasButton = document.getElementById("clear-canvas-button");
+var deleteVertexButton = document.getElementById("delete-vertex-button")
+var shapeRadios = document.querySelectorAll('input[name="shape"]');
+var importButton = document.getElementById("import-button")
+var saveButton = document.getElementById("save-button")
+var colorPicker = document.getElementById("color")
+
+// Shape selection
+var selectedShape;
+// Color selection
+var currColorVal = colorPicker.value
 
 if (!gl){
     console.error("Unable to initialize WebGL.")
@@ -12,6 +23,7 @@ else{
     console.log("Initialize successfull.")
 }
 
+// Mouse listener current coordinates
 var currX, currY;
 canvas.addEventListener('mousemove', function(event) {
   var rect = canvas.getBoundingClientRect();
@@ -22,6 +34,38 @@ canvas.addEventListener('mousemove', function(event) {
   currY = ((canvas.height - yPixel) / canvas.height) * 2 - 1;
 });
 
+// Selection tool listener
+selectionToolButton.addEventListener("click", function(){
+  console.log("selection tool clicked");
+  selectedShape = null;
+  shapeRadios.forEach(function(radio) {
+    radio.checked = false;
+  });
+  canvas.removeEventListener('click', lineListener);
+  canvas.addEventListener('mousedown', onMouseDown);
+})
+
+function onMouseDown(event) {
+  // Convert mouse coordinates to WebGL coordinates
+  var rect = canvas.getBoundingClientRect();
+  var xPixel = event.clientX - rect.left;
+  var yPixel = event.clientY - rect.top;
+  var x = (xPixel / canvas.width) * 2 - 1;
+  var y = ((canvas.height - yPixel) / canvas.height) * 2 - 1;
+
+  // Find the closest point to the mouse click
+  selectedPointIndex = findClosestPointIndex(x, y);
+
+  if (selectedPointIndex !== -1) {
+      isDragging = true;
+      
+      // Print coordinates and index
+      console.log("Clicked point index:", selectedPointIndex);
+      console.log("Coordinates:", linePositions[selectedPointIndex]);
+  }
+}
+
+// Clear canvas listener
 clearCanvasButton.addEventListener("click", function(){
   gl.clearColor(0, 0, 0, 0);
   gl.clear(gl.COLOR_BUFFER_BIT);
@@ -33,9 +77,10 @@ shapeRadios.forEach(function(radio) {
     radio.addEventListener('change', function() {
         if (radio.checked) {
             selectedShape = radio.value;
+            canvas.removeEventListener('mousedown', onMouseDown);
             console.log("Shape yang terpilih:", selectedShape);
             if (selectedShape == "line"){
-              lineListener(gl, program, positionAttributeLocation, positionBuffer);
+              canvas.addEventListener('click', lineListener);
             }
         }
     });
@@ -110,25 +155,3 @@ function findClosestPointIndex(x, y) {
 
   return closestIndex;
 }
-
-function onMouseDown(event) {
-  // Convert mouse coordinates to WebGL coordinates
-  var rect = canvas.getBoundingClientRect();
-  var xPixel = event.clientX - rect.left;
-  var yPixel = event.clientY - rect.top;
-  var x = (xPixel / canvas.width) * 2 - 1;
-  var y = ((canvas.height - yPixel) / canvas.height) * 2 - 1;
-
-  // Find the closest point to the mouse click
-  selectedPointIndex = findClosestPointIndex(x, y);
-
-  if (selectedPointIndex !== -1) {
-      isDragging = true;
-      
-      // Print coordinates and index
-      console.log("Clicked point index:", selectedPointIndex);
-      console.log("Coordinates:", linePositions[selectedPointIndex]);
-  }
-}
-
-canvas.addEventListener('mousedown', onMouseDown);

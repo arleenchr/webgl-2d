@@ -6,36 +6,34 @@ var currentLine = [];
 
 // line listener untuk menghandle klik vertex dan mouselistener ketika menggambar
 function lineListener(){
-  canvas.addEventListener('click', function() {
-    currentLine.push(currX, currY);
-    if (currentLine.length == 4){
-      canvas.removeEventListener('mousemove', mouseMoveHandler);
-      linePositions.push(currentLine);
-      currentLine = [];
-      linePositions.forEach(function(element) {
-        drawLine(element);
-    });
-    console.log(linePositions)
-    }
-    else{
-      canvas.addEventListener('mousemove', mouseMoveHandler);
-    }
-});
+  currentLine.push(new Vertex(currX, currY, currColorVal));
+  if (currentLine.length == 2){
+    canvas.removeEventListener('mousemove', mouseMoveHandler);
+    linePositions.push(currentLine);
+    currentLine = [];
+    linePositions.forEach(function(element) {
+      drawLine(element);
+  });
+  console.log(linePositions)
+  }
+  else{
+    canvas.addEventListener('mousemove', mouseMoveHandler);
+  }
 }
 
 function mouseMoveHandler(event) {
   linePositions.forEach(function(element) {
     drawLine(element);
 });
-  var temp = [currentLine[0], currentLine[1], currX, currY];
+  var temp = [new Vertex(currentLine[0].x, currentLine[0].y, currColorVal), new Vertex(currX, currY, currColorVal)];
   drawLine(temp);
 }
 
 // fungsi menggambar line
 function drawLine(coords){
   var positions = [
-  coords[0], coords[1],
-  coords[2], coords[3],
+  coords[0].x, coords[0].y,
+  coords[1].x, coords[1].y,
   ];
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
