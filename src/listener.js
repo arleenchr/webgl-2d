@@ -1,11 +1,10 @@
-// Color selection
+// COLOR SELECTION LISTENER
 colorPicker.addEventListener("change", function() {
     currColorVal = colorPicker.value;
     console.log(currColorVal)
 });
 
-// Shape radio listener
-// Update selected shape
+// SHAPE RADIO LISTENER
 shapeRadios.forEach(function(radio) {
     radio.addEventListener('change', function() {
         if (radio.checked) {
@@ -13,7 +12,6 @@ shapeRadios.forEach(function(radio) {
             canvas.removeEventListener('mousedown', onMouseDown);
             canvas.removeEventListener('mouseup', onMouseUp);
             canvas.removeEventListener('mousemove', onMouseMove);
-            console.log("Shape yang terpilih:", selectedShape);
             if (selectedShape == "line"){
               canvas.addEventListener('click', lineListener);
             }
@@ -21,7 +19,7 @@ shapeRadios.forEach(function(radio) {
     });
 });
 
-// Mouse listener current coordinates
+// CURRENT MOUSE COORDINATES LISTENER
 var currX, currY;
 canvas.addEventListener('mousemove', function(event) {
   var rect = canvas.getBoundingClientRect();
@@ -32,31 +30,29 @@ canvas.addEventListener('mousemove', function(event) {
   currY = ((canvas.height - yPixel) / canvas.height) * 2 - 1;
 });
 
-// Dragging handler
+// DRAGGING HANDLER LISTENER
 var isDragging = false;
 var initialX, initialY;
+var selectedModel, selectedShape;
 
-function findClosestPointIndex(x, y) {
-    var closestLine = -1;
-    var closestIndex = -1;
+// Closest model and vertex index
+function findClosestIndexes(x, y) {
+    var i_closestModel = -1;
+    var i_closestVertex = -1;
     var closestDistance = Infinity;
   
-    for (var i = 0; i < linePositions.length; i++) {
-        var distance = Math.sqrt((x - linePositions[i][0].x) ** 2 + (y - linePositions[i][0].y) ** 2);
-        if (distance < closestDistance) {
-            closestDistance = distance;
-            closestLine = i;
-            closestIndex = 0;
-        }
-        distance = Math.sqrt((x - linePositions[i][1].x) ** 2 + (y - linePositions[i][1].y) ** 2);
-        if (distance < closestDistance) {
-            closestDistance = distance;
-            closestLine = i;
-            closestIndex = 1;
-        }
-    }
-    return {closestLine: closestLine, closestIndex: closestIndex};
-  }
+    models.forEach(function(element, i_model){
+        element.vertices.forEach(function(vertex, i_vertex){
+            var distance = Math.sqrt((x - vertex.x)**2 + (y - vertex.y)**2);
+            if (distance < closestDistance){
+                closestDistance = distance;
+                i_closestModel = i_model;
+                i_closestVertex = i_vertex;
+            }
+        })
+    })
+    return {i_closestModel: i_closestModel, i_closestVertex: i_closestVertex};
+}
 
 // Selection tool listener
 selectionToolButton.addEventListener("click", function(){
@@ -79,17 +75,11 @@ function onMouseDown(event) {
     var y = ((canvas.height - yPixel) / canvas.height) * 2 - 1;
 
     // Find the closest point to the mouse click
-    var res = findClosestPointIndex(x, y);
-    selectedLine = res.closestLine;
-    selectedIndex = res.closestIndex;
-    console.log("selected line: ", selectedLine);
-    console.log("selected index: ", selectedIndex);
-    if (selectedLine !== -1) {
+    var res = findClosestIndexes(x, y);
+    selectedModel = res.i_closestModel;
+    selectedVertex = res.i_closestVertex;
+    if (selectedModel !== -1) {
         isDragging = true;
-        
-        // Print coordinates and index
-        console.log("Clicked line index:", selectedLine);
-        console.log("Coordinates:", linePositions[selectedLine][selectedIndex]);
     }
     if (selectedShape === null) {
         isDragging = true;
@@ -98,24 +88,21 @@ function onMouseDown(event) {
     }
 }
 
-function onMouseMove(event) {
-if (isDragging) {
-    linePositions[selectedLine][selectedIndex].x = currX;
-    linePositions[selectedLine][selectedIndex].y = currY;
-    
-    linePositions.forEach(function(element) {
-    drawLine(element);
-    });
+function onMouseMove() {
+    if (isDragging) {
+        models[selectedModel].vertices[selectedVertex].x = currX;
+        models[selectedModel].vertices[selectedVertex].y = currY;
+        drawAllLines();
     }
 }
 
-function onMouseUp(event) {
+function onMouseUp() {
     isDragging = false;
 }
 
-// Clear canvas listener
+// CLEAR CANVAS LISTENER
 clearCanvasButton.addEventListener("click", function(){
     gl.clearColor(0, 0, 0, 0);
     gl.clear(gl.COLOR_BUFFER_BIT);
-    linePositions = [];
+    models = [];
 });
