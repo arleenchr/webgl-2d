@@ -36,8 +36,12 @@
                 <div class="color-picker-container">
                     <label for="favcolor" class="color-picker-label">Select color: </label>
                     <input type="color" id="color" value="#ff0000">
+                    <button id="coloring-tool-button" class="coloring-tool-button">Coloring tool</button>
                 </div>
-                <button id="select-tool-button" class="select-tool-button">Selection tool</button>
+                <div class="utils-tool-container">
+                    
+                    <button id="select-tool-button" class="select-tool-button">Selection tool</button>
+                </div>
                 <div class="delete-container">
                     <button id="delete-vertex-button" class="delete-vertex-button">Delete vertex</button>
                     <button id="clear-canvas-button" class="clear-canvas-button">Clear canvas</button>
@@ -54,10 +58,10 @@
         </div>
         <script src="canvas.js"></script>
         <script src="vertex.js"></script>
+        <script src="main.js"></script>
         <script src="listener.js"></script>
         <script src="filehandler.js"></script>
         <script src="model.js"></script>
-        <script src="main.js"></script>
         <script src="line.js"></script>
     </body>
 </html>

@@ -2,20 +2,6 @@ var canvas = document.querySelector("#gl-canvas")
 var container = document.getElementById("canvas-container");
 var gl = canvas.getContext("webgl");
 
-// HTML element
-var selectionToolButton = document.getElementById("select-tool-button");
-var clearCanvasButton = document.getElementById("clear-canvas-button");
-var deleteVertexButton = document.getElementById("delete-vertex-button")
-var shapeRadios = document.querySelectorAll('input[name="shape"]');
-var importButton = document.getElementById("import-button")
-var saveButton = document.getElementById("save-button")
-var colorPicker = document.getElementById("color")
-
-// Shape selection
-var selectedShape;
-// Color selection
-var currColorVal = colorPicker.value
-
 if (!gl){
     console.error("Unable to initialize WebGL.")
 }
