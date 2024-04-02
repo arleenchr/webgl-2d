@@ -2,7 +2,6 @@
 colorPicker.addEventListener("change", function() {
     currColorVal = colorPicker.value;
     console.log(currColorVal)
-    loadShader();
 });
 
 // Shape radio listener
