@@ -60,6 +60,7 @@ function findClosestIndexes(x, y) {
 // Selection tool listener
 selectionToolButton.addEventListener("click", function(){
     selectedShape = null;
+    isColoring = false;
     shapeRadios.forEach(function(radio) {
       radio.checked = false;
     });
@@ -81,13 +82,22 @@ function onMouseDown(event) {
     var res = findClosestIndexes(x, y);
     selectedModel = res.i_closestModel;
     selectedVertex = res.i_closestVertex;
-    if (selectedModel !== -1) {
-        isDragging = true;
+    if (isColoring){
+        console.log("not done coloring", currColorVal, models[selectedModel].vertices[selectedVertex].color);
+        models[selectedModel].vertices[selectedVertex].changeColorTo(currColorVal);
+        console.log(selectedModel, selectedVertex);
+        console.log("done coloring", currColorVal, models[selectedModel].vertices[selectedVertex].color);
+        drawAll();
     }
-    if (selectedShape === null) {
-        isDragging = true;
-        initialX = event.clientX;
-        initialY = event.clientY;
+    else{
+        if (selectedModel !== -1) {
+            isDragging = true;
+        }
+        if (selectedShape === null) {
+            isDragging = true;
+            initialX = event.clientX;
+            initialY = event.clientY;
+        }
     }
 }
 
@@ -139,7 +149,13 @@ importButton.addEventListener('click', function(){
 // COLORING TOOL BUTTON
 var isColoring = false;
 coloringToolButton.addEventListener('click', function(){
-    
+    isColoring = true
+    removeAllShapeListener();
+    selectedShape = null;
+    shapeRadios.forEach(function(radio) {
+      radio.checked = false;
+    });
+    canvas.addEventListener('mousedown', onMouseDown);
 })
 
 function onColoring(){

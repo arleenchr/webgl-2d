@@ -78,4 +78,5 @@ function drawRectangle(element){
     var primitiveType = gl.TRIANGLE_STRIP; // or gl.TRIANGLES
     var count = 4; // Number of vertices
     gl.drawArrays(primitiveType, offset, count);
+    gl.drawArrays(gl.POINTS, 0, count);
 }
