@@ -106,3 +106,29 @@ clearCanvasButton.addEventListener("click", function(){
     gl.clear(gl.COLOR_BUFFER_BIT);
     models = [];
 });
+
+// SAVE BUTTON LISTENER
+saveButton.addEventListener('click', function(){
+    var json = JSON.stringify(models);
+    downloadJSON(json, '' + '.json');
+});
+
+// IMPORT BUTTON LISTENER
+var file;
+importButton.addEventListener('click', function(){
+    var input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'application/json';
+    input.onchange = function(event) {
+        file = event.target.files[0];
+        if (file) {
+        loadJSON(file).then(models_input => {
+            models.push(...models_input);
+            drawAll();
+        }).catch(error => {
+            console.error("Error loading JSON:", error);
+        });
+        }
+    };
+    input.click();
+});

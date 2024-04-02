@@ -10,7 +10,7 @@ function lineListener(){
     canvas.removeEventListener('mousemove', mouseMoveHandler);
     models.push(new Model('line', 2, new Array(currentLine[0], currentLine[1]), true))
     currentLine = [];
-    drawAllLines();
+    drawAll();
   }
   else{
     canvas.addEventListener('mousemove', mouseMoveHandler);
@@ -19,7 +19,7 @@ function lineListener(){
 
 // DRAWING LINE WHILE DRAG
 function mouseMoveHandler() {
-  drawAllLines();
+  drawAll();
   var temp = new Model('line', 2, new Array(currentLine[0], new Vertex(currX, currY, currColorVal), true))
   drawLine(temp);
 }
