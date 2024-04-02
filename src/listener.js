@@ -1,3 +1,10 @@
+// Color selection
+colorPicker.addEventListener("change", function() {
+    currColorVal = colorPicker.value;
+    console.log(currColorVal)
+    loadShader();
+});
+
 // Shape radio listener
 // Update selected shape
 shapeRadios.forEach(function(radio) {

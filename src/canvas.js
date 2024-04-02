@@ -52,15 +52,29 @@ function createProgram(gl, vertexShader, fragmentShader) {
 }
 
 // Get the strings for our GLSL shaders
-var vertexShaderSource = 
-'attribute vec3 coordinates;\n' +
-'void main(void) {\n' +
-   ' gl_Position = vec4(coordinates, 1.0);\n' +
-   'gl_PointSize = 10.0;\n'+
-'}';
-var fragmentShaderSource = 'void main(void) {\n' +
-' gl_FragColor = vec4(1, 0, 0.5, 1);\n' +
-'}';
+var vertexShaderSource = `
+  attribute vec3 coordinates;
+  attribute vec4 color;
+
+  varying vec4 v_col;
+
+  void main(void) {
+    gl_Position = vec4(coordinates, 1.0);
+    gl_PointSize = 10.0;
+
+    v_col = color;
+  }
+`;
+var fragmentShaderSource = `
+  precision highp float;
+
+  varying vec4 v_col;
+
+  // uniform vec4 color;
+  void main(void) {
+    gl_FragColor = v_col;
+  }
+`;
 
 // create GLSL shaders, upload the GLSL source, compile the shaders
 var vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
@@ -69,11 +83,8 @@ var fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
 // Link the two shaders into a program
 var program = createProgram(gl, vertexShader, fragmentShader);
 
-// look up where the vertex data needs to go.
+// Retrieve the uniform location for color
 var positionAttributeLocation = gl.getAttribLocation(program, "coordinates");
-
-// Create a buffer and put three 2d clip space points in it
+var colorAttributeLocation = gl.getAttribLocation(program, "color");
 var positionBuffer = gl.createBuffer();
-
-// Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
-gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+var colorBuffer = gl.createBuffer();
