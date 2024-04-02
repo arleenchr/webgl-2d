@@ -17,6 +17,12 @@ shapeRadios.forEach(function(radio) {
             } else if (selectedShape == "rect"){
               removeAllShapeListener();
               canvas.addEventListener('click', rectListener);
+            } else if (selectedShape == "square"){
+                removeAllShapeListener();
+                canvas.addEventListener('click', squareListener);
+            } else if (selectedShape == "polygon"){
+                removeAllShapeListener();
+                canvas.addEventListener('click', polygonListener);
             }
         }
     });

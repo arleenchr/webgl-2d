@@ -1,4 +1,4 @@
-import { convexHull } from "./convexhull";
+// import { convexHull } from "./convexhull";
 
 var currentPolygon = [];
 var countVertex = document.querySelector("#poly-vertices-input");
