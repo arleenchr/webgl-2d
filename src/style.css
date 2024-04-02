@@ -62,6 +62,7 @@
     display: flex;
     flex-direction: row;
     margin-bottom: 1rem;
+    align-items: center;
     color: white;
 }
 
@@ -75,13 +76,23 @@
     width:100%;
 }
 .select-tool-button{
+    flex: 1;
+    width: inherit;
+    background-color: #028FDC;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    padding: 1.5vh;
+}
+.coloring-tool-button{
+    flex: 1;
     width: inherit;
     border: 2px solid #ffffff;
     background-color: transparent;
     color: #ffffff;
-    margin-bottom: 1.5vh;
     border-radius: 5px;
     padding: 1.5vh;
+    margin-left: 2.5vh;
 }
 .delete-vertex-button{
     width: inherit;
@@ -99,6 +110,13 @@
     color: white;
     border-radius: 5px;
     padding: 1.5vh;
+}
+
+.utils-tool-container{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 1.5vh;
 }
 
 .import-save-container{

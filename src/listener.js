@@ -1,7 +1,6 @@
 // COLOR SELECTION LISTENER
 colorPicker.addEventListener("change", function() {
     currColorVal = colorPicker.value;
-    console.log(currColorVal)
 });
 
 // SHAPE RADIO LISTENER
@@ -41,7 +40,7 @@ var selectedModel, selectedShape;
 function findClosestIndexes(x, y) {
     var i_closestModel = -1;
     var i_closestVertex = -1;
-    var closestDistance = Infinity;
+    var closestDistance = 0.01;
   
     models.forEach(function(element, i_model){
         element.vertices.forEach(function(vertex, i_vertex){
@@ -62,7 +61,7 @@ selectionToolButton.addEventListener("click", function(){
     shapeRadios.forEach(function(radio) {
       radio.checked = false;
     });
-    canvas.removeEventListener('click', lineListener);
+    removeAllShapeListener();
     canvas.addEventListener('mousedown', onMouseDown);
     canvas.addEventListener('mouseup', onMouseUp);
     canvas.addEventListener('mousemove', onMouseMove);
@@ -91,7 +90,7 @@ function onMouseDown(event) {
 }
 
 function onMouseMove() {
-    if (isDragging) {
+    if (isDragging && selectedModel != -1) {
         models[selectedModel].vertices[selectedVertex].x = currX;
         models[selectedModel].vertices[selectedVertex].y = currY;
         drawAllLines();
@@ -134,3 +133,13 @@ importButton.addEventListener('click', function(){
     };
     input.click();
 });
+
+// COLORING TOOL BUTTON
+var isColoring = false;
+coloringToolButton.addEventListener('click', function(){
+    
+})
+
+function onColoring(){
+
+}
