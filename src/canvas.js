@@ -23,69 +23,6 @@ else{
     console.log("Initialize successfull.")
 }
 
-// Mouse listener current coordinates
-var currX, currY;
-canvas.addEventListener('mousemove', function(event) {
-  var rect = canvas.getBoundingClientRect();
-  var xPixel = event.clientX - rect.left;
-  var yPixel = event.clientY - rect.top;
-
-  currX = (xPixel / canvas.width) * 2 - 1;
-  currY = ((canvas.height - yPixel) / canvas.height) * 2 - 1;
-});
-
-// Selection tool listener
-selectionToolButton.addEventListener("click", function(){
-  console.log("selection tool clicked");
-  selectedShape = null;
-  shapeRadios.forEach(function(radio) {
-    radio.checked = false;
-  });
-  canvas.removeEventListener('click', lineListener);
-  canvas.addEventListener('mousedown', onMouseDown);
-})
-
-function onMouseDown(event) {
-  // Convert mouse coordinates to WebGL coordinates
-  var rect = canvas.getBoundingClientRect();
-  var xPixel = event.clientX - rect.left;
-  var yPixel = event.clientY - rect.top;
-  var x = (xPixel / canvas.width) * 2 - 1;
-  var y = ((canvas.height - yPixel) / canvas.height) * 2 - 1;
-
-  // Find the closest point to the mouse click
-  selectedPointIndex = findClosestPointIndex(x, y);
-
-  if (selectedPointIndex !== -1) {
-      isDragging = true;
-      
-      // Print coordinates and index
-      console.log("Clicked point index:", selectedPointIndex);
-      console.log("Coordinates:", linePositions[selectedPointIndex]);
-  }
-}
-
-// Clear canvas listener
-clearCanvasButton.addEventListener("click", function(){
-  gl.clearColor(0, 0, 0, 0);
-  gl.clear(gl.COLOR_BUFFER_BIT);
-  linePositions = [];
-});
-
-// Update selected shape
-shapeRadios.forEach(function(radio) {
-    radio.addEventListener('change', function() {
-        if (radio.checked) {
-            selectedShape = radio.value;
-            canvas.removeEventListener('mousedown', onMouseDown);
-            console.log("Shape yang terpilih:", selectedShape);
-            if (selectedShape == "line"){
-              canvas.addEventListener('click', lineListener);
-            }
-        }
-    });
-});
-
 function createShader(gl, type, source) {
     // vertex shader source code
     var shader = gl.createShader(type);
@@ -140,18 +77,3 @@ var positionBuffer = gl.createBuffer();
 
 // Bind it to ARRAY_BUFFER (think of it as ARRAY_BUFFER = positionBuffer)
 gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-
-function findClosestPointIndex(x, y) {
-  var closestIndex = -1;
-  var closestDistance = Infinity;
-
-  for (var i = 0; i < linePositions.length; i++) {
-      var distance = Math.sqrt((x - linePositions[i][0]) ** 2 + (y - linePositions[i][1]) ** 2);
-      if (distance < closestDistance) {
-          closestDistance = distance;
-          closestIndex = i;
-      }
-  }
-
-  return closestIndex;
-}
