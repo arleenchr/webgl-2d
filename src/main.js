@@ -18,11 +18,13 @@ var models = new Array();
 // DRAWING ALL SHAPES
 function drawAll(){
     drawAllLines();
-    drawAllRect();
+    // drawAllRect();
+    // drawAllPolygons();
 }
 
 // REMOVE ALL SHAPE LISTENERS
 function removeAllShapeListener(){
     canvas.removeEventListener('click', lineListener);
-    canvas.removeEventListener('click', rectListener);
+    // canvas.removeEventListener('click', rectListener);
+    // canvas.removeEventListener('click', polygonListener);
 }
