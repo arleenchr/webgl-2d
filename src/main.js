@@ -24,4 +24,5 @@ function drawAll(){
 // REMOVE ALL SHAPE LISTENERS
 function removeAllShapeListener(){
     canvas.removeEventListener('click', lineListener);
+    canvas.removeEventListener('click', rectListener);
 }
