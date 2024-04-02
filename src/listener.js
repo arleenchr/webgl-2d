@@ -14,6 +14,8 @@ shapeRadios.forEach(function(radio) {
             canvas.removeEventListener('mousemove', onMouseMove);
             if (selectedShape == "line"){
               canvas.addEventListener('click', lineListener);
+            } else if (selectedShape == "rect"){
+              canvas.addEventListener('click', rectListener);
             }
         }
     });
