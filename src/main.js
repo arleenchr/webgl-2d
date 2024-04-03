@@ -8,6 +8,7 @@ var saveButton = document.getElementById("save-button");
 var colorPicker = document.getElementById("color");
 var coloringToolButton = document.getElementById("coloring-tool-button");
 var translationToolButton = document.getElementById("translation-tool-button");
+var rotationToolButton = document.getElementById("rotation-tool-button")
 
 // CURRENT SHAPE SELECTION
 var selectedShape;

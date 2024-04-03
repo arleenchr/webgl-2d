@@ -103,6 +103,15 @@
     border-radius: 5px;
     padding: 1.5vh;
 }
+.rotation-tool-button{
+    width: inherit;
+    border: 2px solid #ffffff;
+    background-color: transparent;
+    color: #ffffff;
+    margin-bottom: 1.5vh;
+    border-radius: 5px;
+    padding: 1.5vh;
+}
 .delete-vertex-button{
     width: inherit;
     border: 2px solid #F75D5D;

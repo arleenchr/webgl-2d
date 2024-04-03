@@ -202,6 +202,11 @@ translationToolButton.addEventListener("click", function(){
     
 })
 
+//ROTATION TOOL LISTENER
+rotationToolButton.addEventListener("click",function(){
+    console.log("masuk bang")
+})
+
 // CLEAR CANVAS LISTENER
 clearCanvasButton.addEventListener("click", function(){
     gl.clearColor(0, 0, 0, 0);
