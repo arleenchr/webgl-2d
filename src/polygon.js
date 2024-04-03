@@ -2,7 +2,6 @@ var currentPolygon = [];
 var countVertex = document.getElementById("poly-vertices-input").value;
 function handleInputChange() {
     countVertex = document.getElementById("poly-vertices-input").value;
-    console.log(countVertex); // Log the value to see if it's retrieved correctly
 }
 document.getElementById("poly-vertices-input").addEventListener("change", handleInputChange);
 
@@ -20,14 +19,11 @@ function polygonListener(){
     console.log(countVertex);
     
     currentPolygon.push(new Vertex(currX, currY, currColorVal));
-    console.log(currentPolygon);
 
     if (currentPolygon.length == countVertex){
-    // if (currentPolygon.length == 3){
         canvas.removeEventListener('mousemove', mouseMoveHandlerPolygon);
 
         vertices.push(...currentPolygon);
-        // convexHullVertices.push(...convexHull(currentPolygon));
 
         models.push(new Model('polygon', countVertex, vertices), true);
         currentPolygon = [];
@@ -41,8 +37,11 @@ function polygonListener(){
 function mouseMoveHandlerPolygon() {
     drawAll();
     count = currentPolygon.length;
-    var handlerVertices = new Array(currentPolygon[0], new Vertex(currX, currY, currColorVal));
-    // vertices.push(new Vertex(currX, currY, currColorVal))
+
+    var handlerVertices = new Array();
+    handlerVertices.push(...currentPolygon);
+    handlerVertices.push(new Vertex(currX, currY, currColorVal));
+
     var temp = new Model('polygon', count, handlerVertices);
     drawPolygon(temp);
 }
@@ -54,8 +53,6 @@ function drawAllPolygons(){
 }
 
 function drawPolygon(element){
-    console.log("draw polygon");
-    console.log(element);
     var positions = [];
     var colors = [];
 
@@ -67,8 +64,6 @@ function drawPolygon(element){
         colors.push(element.vertices[i].color[2]);
         colors.push(element.vertices[i].color[3]);
     };
-    console.log(positions);
-    console.log(colors);
 
     // Draw
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
@@ -79,14 +74,12 @@ function drawPolygon(element){
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(positions), gl.STATIC_DRAW);
     
-    // count = currentPolygon.length;
     var size = 2;
     var type = gl.FLOAT;
     var normalize = false;
     var stride = 0;
     var offset = 0;
     gl.vertexAttribPointer(positionAttributeLocation, size, type, normalize, stride, offset);
-    // gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(element.vertices.map(vertex => [vertex.x, vertex.y]).flat()), gl.STATIC_DRAW);
     gl.enableVertexAttribArray(positionAttributeLocation);
 
     // Color
@@ -96,10 +89,10 @@ function drawPolygon(element){
     
     size = 4;
     gl.vertexAttribPointer(colorAttributeLocation, size, type, normalize, stride, offset);
-    // gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(element.vertices.flatMap(vertex => vertex.color)), gl.STATIC_DRAW);
     
     gl.enableVertexAttribArray(colorAttributeLocation);
 
-    gl.drawArrays(gl.TRIANGLE_FAN, 0, element.vertices.length);
+    var primitiveType = element.vertices.length == 2 ? gl.LINES : gl.TRIANGLE_FAN;
+    gl.drawArrays(primitiveType, 0, element.vertices.length);
     gl.drawArrays(gl.POINTS, 0, element.vertices.length)
 }
