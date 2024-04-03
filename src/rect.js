@@ -4,11 +4,9 @@ function rectListener(){
     currRect.push(new Vertex(currX,currY,currColorVal))
     if (currRect.length == 2){
         canvas.removeEventListener('mousemove',mouseMoveHandlerRect);
-        
         coor1 = new Vertex(currRect[0].x,currY,currColorVal);
         coor2 = new Vertex(currX,currRect[0].y,currColorVal);
-        coor3 = new Vertex(currX,currY,currColorVal)
-
+        coor3 = new Vertex(currX,currY,currColorVal);
         models.push(new Model('rect',4,new Array(currRect[0],coor1,coor2,coor3)))
         currRect = [];
         drawAll();
@@ -21,7 +19,7 @@ function mouseMoveHandlerRect(){
     drawAll();
     coor1 = new Vertex(currRect[0].x,currY,currColorVal);
     coor2 = new Vertex(currX,currRect[0].y,currColorVal);
-    coor3 = new Vertex(currX,currY,currColorVal)
+    coor3 = new Vertex(currX,currY,currColorVal);
     var temp = new Model('rect',4,new Array(currRect[0],coor1,coor2,coor3));
     drawRectangle(temp);
 }
