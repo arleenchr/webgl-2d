@@ -186,6 +186,10 @@ function onMouseMove() {
             models[selectedModel].vertices[1].y = currY;
         }
     }
+    else if (isDragging && selectedModel != -1 && models[selectedModel].type == "polygon") {
+        models[selectedModel].vertices[selectedVertex].x = currX;
+        models[selectedModel].vertices[selectedVertex].y = currY;
+    }
     drawAll();
 }
 

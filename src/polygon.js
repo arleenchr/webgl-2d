@@ -56,14 +56,15 @@ function drawAllPolygons(){
 function drawPolygon(element){
     var positions = [];
     var colors = [];
+    var verticesHull = convexHull(element.vertices);
 
-    for (let i = 0; i < element.vertices.length; i++){
-        positions.push(element.vertices[i].x);
-        positions.push(element.vertices[i].y);
-        colors.push(element.vertices[i].color[0]);
-        colors.push(element.vertices[i].color[1]);
-        colors.push(element.vertices[i].color[2]);
-        colors.push(element.vertices[i].color[3]);
+    for (let i = 0; i < verticesHull.length; i++){
+        positions.push(verticesHull[i].x);
+        positions.push(verticesHull[i].y);
+        colors.push(verticesHull[i].color[0]);
+        colors.push(verticesHull[i].color[1]);
+        colors.push(verticesHull[i].color[2]);
+        colors.push(verticesHull[i].color[3]);
     };
 
     // Draw
