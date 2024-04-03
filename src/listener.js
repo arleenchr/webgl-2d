@@ -23,6 +23,7 @@ shapeRadios.forEach(function(radio) {
             } else if (selectedShape == "poly"){
                 removeAllShapeListener();
                 canvas.addEventListener('click', polygonListener);
+                // canvas.addEventListener('click', cobainPolygon);
             }
         }
     });

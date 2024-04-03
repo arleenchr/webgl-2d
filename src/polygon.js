@@ -10,11 +10,17 @@ var vertices = new Array();
 var convexHullVertices = new Array()
 var count;
 
+var model = new Model('polygon', 3, [new Vertex(-0.832, 0.28, '000000'), new Vertex(-0.396, 0.18, '000000'), new Vertex(-0.688, 0.6352, '000000')], true)
+function cobainPolygon(){
+    drawPolygon(model)
+}
+
 function polygonListener(){
     console.log("polygonnnnnnn");
     console.log(countVertex);
-
+    
     currentPolygon.push(new Vertex(currX, currY, currColorVal));
+    console.log(currentPolygon);
 
     if (currentPolygon.length == countVertex){
     // if (currentPolygon.length == 3){
@@ -23,21 +29,21 @@ function polygonListener(){
         vertices.push(...currentPolygon);
         // convexHullVertices.push(...convexHull(currentPolygon));
 
-        models.push(new Model('polygon', countVertex, vertices));
+        models.push(new Model('polygon', countVertex, vertices), true);
         currentPolygon = [];
         vertices = [];
         drawAll();
     } else {
         canvas.addEventListener('mousemove', mouseMoveHandlerPolygon);
     }
-    console.log(currentPolygon);
 }
 
 function mouseMoveHandlerPolygon() {
     drawAll();
     count = currentPolygon.length;
-    vertices.push(new Vertex(currX, currY, currColorVal))
-    var temp = new Model('polygon', count, vertices);
+    var handlerVertices = new Array(currentPolygon[0], new Vertex(currX, currY, currColorVal));
+    // vertices.push(new Vertex(currX, currY, currColorVal))
+    var temp = new Model('polygon', count, handlerVertices);
     drawPolygon(temp);
 }
 
@@ -48,11 +54,12 @@ function drawAllPolygons(){
 }
 
 function drawPolygon(element){
-    console.log("draw polygon")
+    console.log("draw polygon");
+    console.log(element);
     var positions = [];
     var colors = [];
 
-    for (let i = 0; i < element.length; i++){
+    for (let i = 0; i < element.vertices.length; i++){
         positions.push(element.vertices[i].x);
         positions.push(element.vertices[i].y);
         colors.push(element.vertices[i].color[0]);
@@ -60,6 +67,8 @@ function drawPolygon(element){
         colors.push(element.vertices[i].color[2]);
         colors.push(element.vertices[i].color[3]);
     };
+    console.log(positions);
+    console.log(colors);
 
     // Draw
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
@@ -91,6 +100,6 @@ function drawPolygon(element){
     
     gl.enableVertexAttribArray(colorAttributeLocation);
 
-    gl.drawArrays(gl.LINE, 0, element.vertices.length);
+    gl.drawArrays(gl.TRIANGLE_FAN, 0, element.vertices.length);
     gl.drawArrays(gl.POINTS, 0, element.vertices.length)
 }
