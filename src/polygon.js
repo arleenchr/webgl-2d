@@ -5,7 +5,6 @@ function handleInputChange() {
 }
 document.getElementById("poly-vertices-input").addEventListener("change", handleInputChange);
 
-var vertices = new Array();
 var convexHullVertices = new Array()
 var count;
 
@@ -15,19 +14,16 @@ function cobainPolygon(){
 }
 
 function polygonListener(){
-    console.log("polygonnnnnnn");
-    console.log(countVertex);
-    
     currentPolygon.push(new Vertex(currX, currY, currColorVal));
 
     if (currentPolygon.length == countVertex){
         canvas.removeEventListener('mousemove', mouseMoveHandlerPolygon);
 
-        vertices.push(...currentPolygon);
+        convexHullVertices.push(...convexHull(currentPolygon));
 
-        models.push(new Model('polygon', countVertex, vertices), true);
+        models.push(new Model('polygon', countVertex, convexHullVertices), true);
         currentPolygon = [];
-        vertices = [];
+        convexHullVertices = [];
         drawAll();
     } else {
         canvas.addEventListener('mousemove', mouseMoveHandlerPolygon);
@@ -39,8 +35,13 @@ function mouseMoveHandlerPolygon() {
     count = currentPolygon.length;
 
     var handlerVertices = new Array();
-    handlerVertices.push(...currentPolygon);
-    handlerVertices.push(new Vertex(currX, currY, currColorVal));
+    var currentPolygonConvexHull = [];
+    currentPolygonConvexHull.push(...currentPolygon);
+    currentPolygonConvexHull.push(new Vertex(currX, currY, currColorVal));
+    currentPolygonConvexHull = convexHull(currentPolygonConvexHull);
+    handlerVertices.push(...currentPolygonConvexHull);
+    // handlerVertices.push(...currentPolygon);
+    // handlerVertices.push(new Vertex(currX, currY, currColorVal));
 
     var temp = new Model('polygon', count, handlerVertices);
     drawPolygon(temp);

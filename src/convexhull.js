@@ -1,101 +1,56 @@
 /**
- * Returns the cross product of point a and b
- * @param {Vertex} a
- * @param {Vertex} b
- * @return {number} cross product of a and b
- */
-function crossProduct(a, b){
-    return (a.x * b.y) - (a.y * b.x);
-}
-
-/**
- * Returns true if vertex a, b, and c form a convex corner
+ * Returns 0 if a, b, and c are collinear, 1 if clockwise, 2 if counter-clockwise
  * @param {Vertex} a 
  * @param {Vertex} b 
  * @param {Vertex} c 
- * @return {boolean} true if vertex a, b, and c form a convex corner
  */
-function isConvex(a, b, c){
-    const ab = { x: b.x - a.x, y: b.y - a.y };
-    const bc = { x: c.x - b.x, y: c.y - b.y };
-
-    // Convex corner is when the determinant between BA and BC is greater than 0
-    return crossProduct(ab, bc) > 0;
+function convexOrientation(a, b, c){
+    // if slope between b and c greater than slope between a and b, then CCW
+    // if slope between b and c less than slope between a and b, then CW
+    // if slope between b and c equals slope between a and b, then collinear
+    let slopeDiff = (c.y - b.y) * (b.x - a.x) - (c.x - b.x) * (b.y - a.y);
+    return (slopeDiff == 0) ? 0 : ((slopeDiff < 0) ? 1 : 2);
 }
 
 /**
- * 
- * @param {Vertex} a 
- * @param {Vertex} b 
- * @returns {boolean} true if 
- */
-function compareAngles(a, b) {
-    if (isConvex(origin, a, b)) {
-        return true;
-    } else if (convex(origin, b, a)) {
-        return false;
-    } else {
-        const distA = Math.abs(a.x - origin.x) + Math.abs(a.y - origin.y);
-        const distB = Math.abs(b.x - origin.x) + Math.abs(b.y - origin.y);
-    
-        return distA < distB;
-    }
-}
-
-/**
- * 
- * @param {Array<Vertex>} vertices 
- * @return {Array<Vertex>} array of convex hull vertices
+ * Returns convex hull vertices (Jarvis Algorithm)
+ * @param {Vertex[]} vertices 
+ * @returns Vertex[]
  */
 function convexHull(vertices){
-    let n = vertices.length
+    let n = vertices.length;
+
+    if (n < 3) return vertices;
     
-    if (n < 3) { return vertices; }
+    let result = [];
 
-    // Store the bottom right vertex in vertices[0]
-    let indexLowest = 0;
-    for (let i = 1; i < n; ++i) {
-        if (vertices[i].y < vertices[indexLowest].y && vertices[i].x > vertices[indexLowest].x){
-            indexLowest = i;
-        }
-    }
-    // Swap
-    [vertices[0], vertices[indexLowest]] = [vertices[indexLowest], vertices[0]];
-    origin = vertices[0];
-
-    // Sort the other vertices (without origin)
-    vertices.slice(1).sort(compareAngles);
-
-    let stackVertices = []; // stack to find the vertices of convex hull
-    stackVertices.push(vertices[0]);
-    stackVertices.push(vertices[1]);
-
-    let pointer = 2;
-    while (pointer < n) {
-        let a = stackVertices[stackVertices.length - 2];
-        let b = stackVertices[stackVertices.length - 1];
-        let c = vertices[pointer];
-        if (convex(a, b, c)){
-            // The vertices form a convex corner. (CCW)
-            stackVertices.push(c);
-            ++pointer;
-        } else{
-            // The middle point does not lie on the convex hull
-            stackVertices.pop();
-            if (stackVertices.length < 2){
-                stackVertices.push(c);
-                ++pointer;
-            }
+    // find leftmost vertex
+    let leftmostIdx = 0;
+    for (let i = 0; i < n; i++){
+        if (vertices[i].x < vertices[leftmostIdx].x || vertices[i].y < vertices[leftmostIdx].y){
+            leftmostIdx = i;
         }
     }
 
-    // If three collinear vertices are found at the end, remove the middle one
-    let a = stackVertices[stackVertices.length - 2];
-    let b = stackVertices[stackVertices.length - 1];
-    let c = stackVertices[0];
-    if (!convex(a, b, c)) {
-        stackVertices.pop();
-    }
+    // start from leftmost vertex, iterate (CCW) until reach the start vertex again.
+    let currIdx = leftmostIdx, nextIdx;
+    do{
+        // add current vertex to result
+        result.push(vertices[currIdx]);
+    
+        // search for next vertex that orientation(currIdx, nextIdx, ...) is counterclockwise 
+        nextIdx = (currIdx + 1) % n;
+           
+        for (let i = 0; i < n; i++){
+           // if i is more counterclockwise than current nextIdx, update nextIdx
+           if (convexOrientation(vertices[currIdx], vertices[i], vertices[nextIdx]) == 2){
+               nextIdx = i;
+           }
+        }
+    
+        // nextIdx is now the most CCW to currIdx
+        currIdx = nextIdx;
+    } while (currIdx != leftmostIdx);
 
-    return stackVertices;
+    return result;
 }
