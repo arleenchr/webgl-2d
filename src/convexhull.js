@@ -47,7 +47,7 @@ function compareAngles(a, b) {
  * @param {Array<Vertex>} vertices 
  * @return {Array<Vertex>} array of convex hull vertices
  */
-export function convexHull(vertices){
+function convexHull(vertices){
     let n = vertices.length
     
     if (n < 3) { return vertices; }

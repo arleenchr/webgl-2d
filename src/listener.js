@@ -20,7 +20,7 @@ shapeRadios.forEach(function(radio) {
             } else if (selectedShape == "square"){
                 removeAllShapeListener();
                 canvas.addEventListener('click', squareListener);
-            } else if (selectedShape == "polygon"){
+            } else if (selectedShape == "poly"){
                 removeAllShapeListener();
                 canvas.addEventListener('click', polygonListener);
             }
