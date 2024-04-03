@@ -11,6 +11,9 @@ shapeRadios.forEach(function(radio) {
             canvas.removeEventListener('mousedown', onMouseDown);
             canvas.removeEventListener('mouseup', onMouseUp);
             canvas.removeEventListener('mousemove', onMouseMove);
+            canvas.removeEventListener('mousedown', onTranslation);
+            canvas.removeEventListener('mousemove', onTranslationDrag);
+            canvas.removeEventListener('mouseup', onTranslationUp);
             if (selectedShape == "line"){
               removeAllShapeListener();
               canvas.addEventListener('click', lineListener);
@@ -72,6 +75,9 @@ selectionToolButton.addEventListener("click", function(){
       radio.checked = false;
     });
     removeAllShapeListener();
+    canvas.removeEventListener('mousedown', onTranslation);
+    canvas.removeEventListener('mousemove', onTranslationDrag);
+    canvas.removeEventListener('mouseup', onTranslationUp);
     canvas.addEventListener('mousedown', onMouseDown);
     canvas.addEventListener('mouseup', onMouseUp);
     canvas.addEventListener('mousemove', onMouseMove);
@@ -194,9 +200,88 @@ function onMouseUp() {
 }
 
 // TRANSLATION TOOL LISTENER
+var isDraggingShape = false;
 translationToolButton.addEventListener("click", function(){
-    
+    selectedShape = null;
+    isColoring = false;
+    shapeRadios.forEach(function(radio) {
+      radio.checked = false;
+    });
+    removeAllShapeListener();
+    canvas.addEventListener('mousedown', onTranslation);
+    canvas.addEventListener('mousemove', onTranslationDrag);
+    canvas.addEventListener('mouseup', onTranslationUp);
 })
+
+function onTranslation(){
+    selectedModel = -1;
+    models.forEach(function(model, index){
+        if (model.type == "line"){
+            if (isPointInsideLine(model)){
+                selectedModel = index;
+                isDraggingShape = true;
+            }
+        }
+        else if (model.type == "rect" || model.type == "square"){
+            if (isPointInsideSquare(model)){
+                selectedModel = index;
+                isDraggingShape = true;
+            }
+        }
+        else if (model.type == "polygon"){
+            console.log(isPointInsidePolygon(model));
+        }
+    });
+    initialX = currX;
+    initialY = currY;
+}
+
+function onTranslationDrag(){
+
+}
+
+function onTranslationUp(){
+    if (isDraggingShape && selectedModel != -1){
+        models[selectedModel].vertices.forEach(function(element, index){
+            models[selectedModel].vertices[index].x += (currX-initialX);
+            models[selectedModel].vertices[index].y += (currY-initialY);
+        });
+    }
+    isDraggingShape = false;
+    drawAll();
+}
+
+function isPointInsideLine(model) {
+    var startPoint = model.vertices[0];
+    var endPoint = model.vertices[1];
+
+    var distance = Math.abs((endPoint.y - startPoint.y) * currX - 
+                            (endPoint.x - startPoint.x) * currY + 
+                            endPoint.x * startPoint.y - 
+                            endPoint.y * startPoint.x) / 
+                            Math.sqrt((endPoint.y - startPoint.y) ** 2 + 
+                            (endPoint.x - startPoint.x) ** 2);
+
+    return distance <= 0.1;
+}
+
+function isPointInsideSquare(model) {
+    var coor0 = model.vertices[0];
+    var coor1 = model.vertices[1];
+    var coor2 = model.vertices[2];
+    var coor3 = model.vertices[3];
+
+    var minX = Math.min(coor0.x, coor1.x, coor2.x, coor3.x);
+    var maxX = Math.max(coor0.x, coor1.x, coor2.x, coor3.x);
+    var minY = Math.min(coor0.y, coor1.y, coor2.y, coor3.y);
+    var maxY = Math.max(coor0.y, coor1.y, coor2.y, coor3.y);
+
+    return (currX >= minX && currX <= maxX && currY >= minY && currY <= maxY);
+}
+
+function isPointInsidePolygon(vertices, x, y) {
+    
+}
 
 // CLEAR CANVAS LISTENER
 clearCanvasButton.addEventListener("click", function(){
@@ -242,7 +327,3 @@ coloringToolButton.addEventListener('click', function(){
     });
     canvas.addEventListener('mousedown', onMouseDown);
 })
-
-function onColoring(){
-
-}

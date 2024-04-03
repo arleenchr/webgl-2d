@@ -1,7 +1,6 @@
 var currRect = []
 
 function rectListener(){
-    console.log("rect bng");
     currRect.push(new Vertex(currX,currY,currColorVal))
     if (currRect.length == 2){
         canvas.removeEventListener('mousemove',mouseMoveHandlerRect);

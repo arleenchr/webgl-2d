@@ -12,7 +12,7 @@ var translationToolButton = document.getElementById("translation-tool-button");
 // CURRENT SHAPE SELECTION
 var selectedShape;
 // CURRENT COLOR VALUE
-var currColorVal = colorPicker.value
+var currColorVal = colorPicker.value;
 
 var models = new Array();
 
