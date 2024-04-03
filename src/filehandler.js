@@ -14,6 +14,10 @@ function downloadJSON(data){
 
 function loadJSON(){
     return new Promise((resolve, reject) => {
+        gl.clearColor(0, 0, 0, 0);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        models = [];
+        
         var reader = new FileReader();
         reader.onload = function(event) {
           var json = event.target.result;
