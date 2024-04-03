@@ -21,7 +21,7 @@ function polygonListener(){
 
         convexHullVertices.push(...convexHull(currentPolygon));
 
-        models.push(new Model('polygon', countVertex, convexHullVertices), true);
+        models.push(new Model('polygon', countVertex, convexHullVertices, true));
         currentPolygon = [];
         convexHullVertices = [];
         drawAll();
