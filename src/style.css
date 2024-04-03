@@ -78,8 +78,8 @@
 .select-tool-button{
     flex: 1;
     width: inherit;
-    background-color: #028FDC;
-    border: none;
+    background-color: transparent;
+    border: 2px solid #ffffff;
     color: white;
     border-radius: 5px;
     padding: 1.5vh;
