@@ -193,6 +193,11 @@ function onMouseUp() {
     isDragging = false;
 }
 
+// TRANSLATION TOOL LISTENER
+translationToolButton.addEventListener("click", function(){
+    
+})
+
 // CLEAR CANVAS LISTENER
 clearCanvasButton.addEventListener("click", function(){
     gl.clearColor(0, 0, 0, 0);
