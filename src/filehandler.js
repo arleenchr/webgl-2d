@@ -14,11 +14,31 @@ function downloadJSON(data){
 
 function loadJSON(){
     return new Promise((resolve, reject) => {
+        gl.clearColor(0, 0, 0, 0);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        models = [];
+        
         var reader = new FileReader();
         reader.onload = function(event) {
           var json = event.target.result;
           try {
-            var models = JSON.parse(json);
+            var modelsJson = JSON.parse(json);
+
+            modelsJson.forEach(model => {
+              var vertices = new Array();
+              model.vertices.forEach(v => {
+                var vertex = new Vertex(v.x, v.y, '');
+                vertex.color = v.color;
+                vertices.push(vertex);
+              })
+              models.push(new Model(
+                model.type, 
+                model.vertexCount, 
+                vertices,
+                true
+              ));
+            });
+            
             resolve(models);
           } catch (error) {
             reject(error);

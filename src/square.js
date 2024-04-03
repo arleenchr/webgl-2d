@@ -10,7 +10,7 @@ function squareListener(){
         coor3 = new Vertex(currX,currY,currColorVal);
 
         console.log(currSquare[0],coor1,coor2,coor3);
-        models.push(new Model('square',4,new Array(currSquare[0],coor1,coor2,coor3)));
+        models.push(new Model('square',4,new Array(currSquare[0],coor1,coor2,coor3), true));
         currSquare = [];
         drawAll();
     } else {
@@ -46,7 +46,7 @@ function mouseMoveHandlerSquare(){
     coor1 = new Vertex(currSquare[0].x,currY,currColorVal);
     coor2 = new Vertex(currX,currSquare[0].y,currColorVal);
     coor3 = new Vertex(currX,currY,currColorVal)
-    var temp = new Model('square',4,new Array(currSquare[0],coor1,coor2,coor3));
+    var temp = new Model('square',4,new Array(currSquare[0],coor1,coor2,coor3), false);
     drawSquare(temp);
 }
 

@@ -7,7 +7,7 @@ function rectListener(){
         coor1 = new Vertex(currRect[0].x,currY,currColorVal);
         coor2 = new Vertex(currX,currRect[0].y,currColorVal);
         coor3 = new Vertex(currX,currY,currColorVal);
-        models.push(new Model('rect',4,new Array(currRect[0],coor1,coor2,coor3)))
+        models.push(new Model('rect',4,new Array(currRect[0],coor1,coor2,coor3), true))
         currRect = [];
         drawAll();
     } else {
@@ -20,7 +20,7 @@ function mouseMoveHandlerRect(){
     coor1 = new Vertex(currRect[0].x,currY,currColorVal);
     coor2 = new Vertex(currX,currRect[0].y,currColorVal);
     coor3 = new Vertex(currX,currY,currColorVal);
-    var temp = new Model('rect',4,new Array(currRect[0],coor1,coor2,coor3));
+    var temp = new Model('rect',4,new Array(currRect[0],coor1,coor2,coor3), false);
     drawRectangle(temp);
 }
 
