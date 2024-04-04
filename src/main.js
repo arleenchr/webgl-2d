@@ -7,7 +7,7 @@ var importButton = document.getElementById("import-button");
 var saveButton = document.getElementById("save-button");
 var colorPicker = document.getElementById("color");
 var coloringToolButton = document.getElementById("coloring-tool-button");
-var translationToolButton = document.getElementById("translation-tool-button");
+var selectShapeButton = document.getElementById("select-shape-button");
 
 // CURRENT SHAPE SELECTION
 var selectedShape;

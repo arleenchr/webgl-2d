@@ -8,6 +8,12 @@ shapeRadios.forEach(function(radio) {
     radio.addEventListener('change', function() {
         if (radio.checked) {
             selectedShape = radio.value;
+            selectShapeButton.style.backgroundColor = "transparent"
+            selectShapeButton.style.color = "#ffffff"
+            selectionToolButton.style.backgroundColor = "transparent"
+            selectionToolButton.style.color = "#ffffff"
+            coloringToolButton.style.backgroundColor = "transparent"
+            coloringToolButton.style.color = "#ffffff"
             canvas.removeEventListener('mousedown', onMouseDown);
             canvas.removeEventListener('mouseup', onMouseUp);
             canvas.removeEventListener('mousemove', onMouseMove);
@@ -69,11 +75,17 @@ function findClosestIndexes(x, y) {
 
 // Selection tool listener
 selectionToolButton.addEventListener("click", function(){
+    selectionToolButton.style.backgroundColor = "#ffffff"
+    selectionToolButton.style.color = "#525D64"
     selectedShape = null;
     isColoring = false;
     shapeRadios.forEach(function(radio) {
       radio.checked = false;
     });
+    selectShapeButton.style.backgroundColor = "transparent"
+    selectShapeButton.style.color = "#ffffff"
+    coloringToolButton.style.backgroundColor = "transparent"
+    coloringToolButton.style.color = "#ffffff"
     removeAllShapeListener();
     canvas.removeEventListener('mousedown', onTranslation);
     canvas.removeEventListener('mousemove', onTranslationDrag);
@@ -205,13 +217,19 @@ function onMouseUp() {
 
 // TRANSLATION TOOL LISTENER
 var isDraggingShape = false;
-translationToolButton.addEventListener("click", function(){
+selectShapeButton.addEventListener("click", function(){
+    selectShapeButton.style.backgroundColor = "#ffffff"
+    selectShapeButton.style.color = "#525D64"
     selectedShape = null;
     isColoring = false;
     shapeRadios.forEach(function(radio) {
       radio.checked = false;
     });
     removeAllShapeListener();
+    coloringToolButton.style.backgroundColor = "transparent"
+    coloringToolButton.style.color = "#ffffff"
+    selectionToolButton.style.backgroundColor = "transparent"
+    selectionToolButton.style.color = "#ffffff"
     canvas.addEventListener('mousedown', onTranslation);
     canvas.addEventListener('mousemove', onTranslationDrag);
     canvas.addEventListener('mouseup', onTranslationUp);
@@ -302,6 +320,12 @@ clearCanvasButton.addEventListener("click", function(){
     gl.clearColor(0, 0, 0, 0);
     gl.clear(gl.COLOR_BUFFER_BIT);
     models = [];
+    selectShapeButton.style.backgroundColor = "transparent"
+    selectShapeButton.style.color = "#ffffff"
+    selectionToolButton.style.backgroundColor = "transparent"
+    selectionToolButton.style.color = "#ffffff"
+    coloringToolButton.style.backgroundColor = "transparent"
+    coloringToolButton.style.color = "#ffffff"
 });
 
 // SAVE BUTTON LISTENER
@@ -333,7 +357,14 @@ importButton.addEventListener('click', function(){
 // COLORING TOOL BUTTON
 var isColoring = false;
 coloringToolButton.addEventListener('click', function(){
+    coloringToolButton.style.backgroundColor = "#ffffff"
+    coloringToolButton.style.color = "#525D64"
     isColoring = true
+    
+    selectShapeButton.style.backgroundColor = "transparent"
+    selectShapeButton.style.color = "#ffffff"
+    selectionToolButton.style.backgroundColor = "transparent"
+    selectionToolButton.style.color = "#ffffff"
     removeAllShapeListener();
     selectedShape = null;
     shapeRadios.forEach(function(radio) {
