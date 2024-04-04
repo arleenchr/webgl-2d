@@ -11,11 +11,15 @@ var coloringToolButton = document.getElementById("coloring-tool-button");
 var selectShapeButton = document.getElementById("select-shape-button");
 var rotationButton = document.getElementById("rotation-button");
 var rotationSlider = document.getElementById("rotation-slider");
+var shearXButton = document.getElementById("shear-x-button")
+var shearXSlider = document.getElementById("shear-x-slider")
 
 addVertexButton.disabled = true;
 deleteVertexButton.disabled = true;
 rotationButton.disabled = true;
 rotationSlider.disabled = true;
+shearXButton.disabled = true;
+shearXSlider.disabled = true;
 
 // CURRENT SHAPE SELECTION
 var selectedShape;
