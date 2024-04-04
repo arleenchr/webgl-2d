@@ -46,6 +46,10 @@
                     <button id="add-vertex-button" class="add-vertex-button">Add vertex</button>
                     <button id="delete-vertex-button" class="delete-vertex-button">Delete vertex</button>
                 </div>
+                <div class="rotation-tool-container">
+                    <button id="rotation-button" class="rotation-button">Rotate shape</button>
+                    <input type="range" min="-180" max="180" value="0" class="rotation-slider" id="rotation-slider">
+                </div>
                 <button id="clear-canvas-button" class="clear-canvas-button">Clear canvas</button>
             </div>
             <div class="import-save-container">
@@ -68,5 +72,6 @@
         <script src="square.js"></script>
         <script src="convexhull.js"></script>
         <script src="polygon.js"></script>
+        <script src="rotation.js"></script>
     </body>
 </html>

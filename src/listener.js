@@ -22,6 +22,13 @@ shapeRadios.forEach(function(radio) {
             deleteVertexButton.style.color = "#ca8484"
             deleteVertexButton.style.borderColor = "#ca8484"
             deleteVertexButton.disabled = true;
+            rotationButton.style.backgroundColor = "transparent"
+            rotationButton.style.color = "#8c959a"
+            rotationButton.style.borderColor = "#8c959a"
+            rotationButton.disabled = true;
+            rotationSlider.style.backgroundColor = "#777f83"
+            rotationSlider.disabled = true;
+
             canvas.removeEventListener('mousedown', onMouseDown);
             canvas.removeEventListener('mouseup', onMouseUp);
             canvas.removeEventListener('mousemove', onMouseMove);
@@ -104,6 +111,13 @@ selectionToolButton.addEventListener("click", function(){
     deleteVertexButton.style.color = "#ca8484"
     deleteVertexButton.style.borderColor = "#ca8484"
     deleteVertexButton.disabled = true;
+    rotationButton.style.backgroundColor = "transparent"
+    rotationButton.style.color = "#8c959a"
+    rotationButton.style.borderColor = "#8c959a"
+    rotationButton.disabled = true;
+    rotationSlider.style.backgroundColor = "#777f83"
+    rotationSlider.disabled = true;
+    
     removeAllShapeListener();
     canvas.removeEventListener('mousedown', onTranslation);
     canvas.removeEventListener('mousemove', onTranslationDrag);
@@ -283,6 +297,13 @@ selectShapeButton.addEventListener("click", function(){
     deleteVertexButton.style.backgroundColor = "transparent"
     deleteVertexButton.style.color = "#F75D5D"
     deleteVertexButton.disabled = false;
+    rotationButton.style.backgroundColor = "transparent"
+    rotationButton.style.color = "#ffffff"
+    rotationButton.style.borderColor = "#ffffff"
+    rotationButton.disabled = false;
+    rotationSlider.style.backgroundColor = "#dbdee0"
+    rotationSlider.disabled = false;
+
     canvas.addEventListener('mousedown', onTranslation);
     canvas.addEventListener('mousemove', onTranslationDrag);
     canvas.addEventListener('mouseup', onTranslationUp);
@@ -418,6 +439,38 @@ deleteVertexButton.addEventListener("click", function(){
     // canvas.addEventListener('mousemove', onMouseMove);
 })
 
+// ROTATION BUTTON LISTENER
+rotationButton.addEventListener("click", function(){
+    console.log("rotate bng", selectedModel, rotationSlider.value)
+    rotationButton.style.backgroundColor = "#ffffff"
+    rotationButton.style.color = "#525D64"
+    rotationSlider.value = 0
+    isColoring = false;
+    isAddingVertex = false;
+    isDeletingVertex = false;
+    shapeRadios.forEach(function(radio) {
+      radio.checked = false;
+    });
+    deleteVertexButton.style.backgroundColor = "transparent"
+    deleteVertexButton.style.color = "#F75D5D"
+    removeAllShapeListener();
+    canvas.removeEventListener('mousedown', onTranslation);
+    canvas.removeEventListener('mousemove', onTranslationDrag);
+    canvas.removeEventListener('mouseup', onTranslationUp);
+    canvas.removeEventListener('mouseup', onMouseUp);
+    canvas.addEventListener('mousedown', onMouseDown);
+})
+
+rotationSlider.addEventListener("change", function(){
+    console.log(rotationSlider.value)
+    if (selectedModel == null || selectedModel == -1){
+        alert("Select a polygon before add or delete vertex")
+    } else {
+        rotateObject(models[selectedModel], rotationSlider.value)
+        drawAll()
+    }
+})
+
 // CLEAR CANVAS LISTENER
 clearCanvasButton.addEventListener("click", function(){
     gl.clearColor(0, 0, 0, 0);
@@ -437,6 +490,12 @@ clearCanvasButton.addEventListener("click", function(){
     deleteVertexButton.style.color = "#ca8484"
     deleteVertexButton.style.borderColor = "#ca8484"
     deleteVertexButton.disabled = true;
+    rotationButton.style.backgroundColor = "transparent"
+    rotationButton.style.color = "#8c959a"
+    rotationButton.style.borderColor = "#8c959a"
+    rotationButton.disabled = true;
+    rotationSlider.style.backgroundColor = "#777f83"
+    rotationSlider.disabled = true;
 });
 
 // SAVE BUTTON LISTENER
