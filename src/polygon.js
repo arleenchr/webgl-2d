@@ -14,6 +14,11 @@ function cobainPolygon(){
 }
 
 function polygonListener(){
+    if (countVertex < 3){
+        alert("vertex count must be greater than 2");
+        return;
+    }
+
     currentPolygon.push(new Vertex(currX, currY, currColorVal));
 
     if (currentPolygon.length == countVertex){

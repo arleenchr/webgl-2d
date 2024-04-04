@@ -40,6 +40,8 @@ function loadJSON(){
             });
             
             resolve(models);
+
+            console.log(models)
           } catch (error) {
             reject(error);
           }

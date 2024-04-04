@@ -14,6 +14,14 @@ shapeRadios.forEach(function(radio) {
             selectionToolButton.style.color = "#ffffff"
             coloringToolButton.style.backgroundColor = "transparent"
             coloringToolButton.style.color = "#ffffff"
+            addVertexButton.style.backgroundColor = "transparent"
+            addVertexButton.style.color = "#8c959a"
+            addVertexButton.style.borderColor = "#8c959a"
+            addVertexButton.disabled = true;
+            deleteVertexButton.style.backgroundColor = "transparent"
+            deleteVertexButton.style.color = "#ca8484"
+            deleteVertexButton.style.borderColor = "#ca8484"
+            deleteVertexButton.disabled = true;
             canvas.removeEventListener('mousedown', onMouseDown);
             canvas.removeEventListener('mouseup', onMouseUp);
             canvas.removeEventListener('mousemove', onMouseMove);
@@ -79,6 +87,8 @@ selectionToolButton.addEventListener("click", function(){
     selectionToolButton.style.color = "#525D64"
     selectedShape = null;
     isColoring = false;
+    isAddingVertex = false;
+    isDeletingVertex = false;
     shapeRadios.forEach(function(radio) {
       radio.checked = false;
     });
@@ -86,6 +96,14 @@ selectionToolButton.addEventListener("click", function(){
     selectShapeButton.style.color = "#ffffff"
     coloringToolButton.style.backgroundColor = "transparent"
     coloringToolButton.style.color = "#ffffff"
+    addVertexButton.style.backgroundColor = "transparent"
+    addVertexButton.style.color = "#8c959a"
+    addVertexButton.style.borderColor = "#8c959a"
+    addVertexButton.disabled = true;
+    deleteVertexButton.style.backgroundColor = "transparent"
+    deleteVertexButton.style.color = "#ca8484"
+    deleteVertexButton.style.borderColor = "#ca8484"
+    deleteVertexButton.disabled = true;
     removeAllShapeListener();
     canvas.removeEventListener('mousedown', onTranslation);
     canvas.removeEventListener('mousemove', onTranslationDrag);
@@ -110,8 +128,28 @@ function onMouseDown(event) {
     if (isColoring){
         models[selectedModel].vertices[selectedVertex].changeColorTo(currColorVal);
         drawAll();
-    }
-    else{
+    } else if (isAddingVertex){
+        selectedModel = -1;
+        models.forEach(function(model, index){
+            if (model.type == "polygon"){
+                selectedModel = index;
+            } else {
+                alert("Sorry. Add and delete vertex tools are only for polygon shapes")
+            }
+        });
+
+        console.log(models[selectedModel]);
+        console.log(x, y);
+
+        models[selectedModel].vertexCount++;
+        models[selectedModel].vertices.push(new Vertex(x, y, ''));
+        models[selectedModel].vertices[models[selectedModel].vertexCount-1].color = models[selectedModel].vertices[models[selectedModel].vertexCount-2].color 
+        drawAll();
+    } else if (isDeletingVertex){
+        models[selectedModel].vertexCount--;
+        models[selectedModel].vertices.splice(selectedVertex, 1)
+        drawAll();
+    } else{
         if (selectedModel !== -1) {
             isDragging = true;
         }
@@ -222,6 +260,8 @@ selectShapeButton.addEventListener("click", function(){
     selectShapeButton.style.color = "#525D64"
     selectedShape = null;
     isColoring = false;
+    isAddingVertex = false;
+    isDeletingVertex = false;
     shapeRadios.forEach(function(radio) {
       radio.checked = false;
     });
@@ -230,6 +270,14 @@ selectShapeButton.addEventListener("click", function(){
     coloringToolButton.style.color = "#ffffff"
     selectionToolButton.style.backgroundColor = "transparent"
     selectionToolButton.style.color = "#ffffff"
+    addVertexButton.style.borderColor = "#ffffff"
+    addVertexButton.style.backgroundColor = "transparent"
+    addVertexButton.style.color = "#ffffff"
+    addVertexButton.disabled = false;
+    deleteVertexButton.style.borderColor = "#F75D5D"
+    deleteVertexButton.style.backgroundColor = "transparent"
+    deleteVertexButton.style.color = "#F75D5D"
+    deleteVertexButton.disabled = false;
     canvas.addEventListener('mousedown', onTranslation);
     canvas.addEventListener('mousemove', onTranslationDrag);
     canvas.addEventListener('mouseup', onTranslationUp);
@@ -257,6 +305,8 @@ function onTranslation(){
     });
     initialX = currX;
     initialY = currY;
+    
+    console.log(selectedModel);
 }
 
 function onTranslationDrag(){
@@ -315,6 +365,53 @@ function isPointInsidePolygon(model) {
     return inside;
 }
 
+// Add vertex tool listener
+var isAddingVertex;
+addVertexButton.addEventListener("click", function(){
+    console.log("add bng")
+    addVertexButton.style.backgroundColor = "#ffffff"
+    addVertexButton.style.color = "#525D64"
+    selectedShape = null;
+    isColoring = false;
+    isAddingVertex = true;
+    isDeletingVertex = false;
+    shapeRadios.forEach(function(radio) {
+      radio.checked = false;
+    });
+    deleteVertexButton.style.backgroundColor = "transparent"
+    deleteVertexButton.style.color = "#F75D5D"
+    removeAllShapeListener();
+    canvas.removeEventListener('mousedown', onTranslation);
+    canvas.removeEventListener('mousemove', onTranslationDrag);
+    canvas.removeEventListener('mouseup', onTranslationUp);
+    canvas.removeEventListener('mouseup', onMouseUp);
+    canvas.addEventListener('mousedown', onMouseDown);
+})
+
+// Delete vertex tool listener
+var isDeletingVertex;
+deleteVertexButton.addEventListener("click", function(){
+    console.log("delete bng")
+    deleteVertexButton.style.backgroundColor = "#F75D5D"
+    deleteVertexButton.style.color = "#ffffff"
+    selectedShape = null;
+    isColoring = false;
+    isAddingVertex = false;
+    isDeletingVertex = true;
+    shapeRadios.forEach(function(radio) {
+      radio.checked = false;
+    });
+    addVertexButton.style.backgroundColor = "transparent"
+    addVertexButton.style.color = "#ffffff"
+    removeAllShapeListener();
+    canvas.removeEventListener('mousedown', onTranslation);
+    canvas.removeEventListener('mousemove', onTranslationDrag);
+    canvas.removeEventListener('mouseup', onTranslationUp);
+    canvas.addEventListener('mousedown', onMouseDown);
+    // canvas.addEventListener('mouseup', onMouseUp);
+    // canvas.addEventListener('mousemove', onMouseMove);
+})
+
 // CLEAR CANVAS LISTENER
 clearCanvasButton.addEventListener("click", function(){
     gl.clearColor(0, 0, 0, 0);
@@ -326,6 +423,14 @@ clearCanvasButton.addEventListener("click", function(){
     selectionToolButton.style.color = "#ffffff"
     coloringToolButton.style.backgroundColor = "transparent"
     coloringToolButton.style.color = "#ffffff"
+    addVertexButton.style.backgroundColor = "transparent"
+    addVertexButton.style.color = "#8c959a"
+    addVertexButton.style.borderColor = "#8c959a"
+    addVertexButton.disabled = true;
+    deleteVertexButton.style.backgroundColor = "transparent"
+    deleteVertexButton.style.color = "#ca8484"
+    deleteVertexButton.style.borderColor = "#ca8484"
+    deleteVertexButton.disabled = true;
 });
 
 // SAVE BUTTON LISTENER
@@ -360,11 +465,18 @@ coloringToolButton.addEventListener('click', function(){
     coloringToolButton.style.backgroundColor = "#ffffff"
     coloringToolButton.style.color = "#525D64"
     isColoring = true
-    
+    isAddingVertex = false;
+    isDeletingVertex = false;
     selectShapeButton.style.backgroundColor = "transparent"
     selectShapeButton.style.color = "#ffffff"
     selectionToolButton.style.backgroundColor = "transparent"
     selectionToolButton.style.color = "#ffffff"
+    addVertexButton.style.backgroundColor = "transparent"
+    addVertexButton.style.color = "#8c959a"
+    addVertexButton.style.borderColor = "#8c959a"
+    deleteVertexButton.style.backgroundColor = "transparent"
+    deleteVertexButton.style.color = "#ca8484"
+    deleteVertexButton.style.borderColor = "#ca8484"
     removeAllShapeListener();
     selectedShape = null;
     shapeRadios.forEach(function(radio) {

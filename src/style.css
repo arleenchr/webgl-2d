@@ -116,18 +116,18 @@
 }
 .add-vertex-button{
     width: inherit;
-    border: 2px solid #ffffff;
+    border: 2px solid #8c959a;
     background-color: transparent;
-    color: #ffffff;
+    color: #8c959a;
     border-radius: 5px;
     padding: 1.5vh;
     margin-right: 2.5vh;
 }
 .delete-vertex-button{
     width: inherit;
-    border: 2px solid #F75D5D;
+    border: 2px solid #ca8484;
     background-color: transparent;
-    color: #F75D5D;
+    color: #ca8484;
     border-radius: 5px;
     padding: 1.5vh;
 }
