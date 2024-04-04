@@ -13,6 +13,8 @@ var rotationButton = document.getElementById("rotation-button");
 var rotationSlider = document.getElementById("rotation-slider");
 var shearXButton = document.getElementById("shear-x-button")
 var shearXSlider = document.getElementById("shear-x-slider")
+var shearYButton = document.getElementById("shear-y-button")
+var shearYSlider = document.getElementById("shear-y-slider")
 
 addVertexButton.disabled = true;
 deleteVertexButton.disabled = true;
@@ -20,6 +22,8 @@ rotationButton.disabled = true;
 rotationSlider.disabled = true;
 shearXButton.disabled = true;
 shearXSlider.disabled = true;
+shearYButton.disabled = true;
+shearYSlider.disabled = true;
 
 // CURRENT SHAPE SELECTION
 var selectedShape;
