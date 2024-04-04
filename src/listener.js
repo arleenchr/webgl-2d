@@ -121,6 +121,22 @@ function onMouseDown(event) {
     var x = (xPixel / canvas.width) * 2 - 1;
     var y = ((canvas.height - yPixel) / canvas.height) * 2 - 1;
 
+    if (isAddingVertex){
+        if (selectedModel == null || selectedModel == -1){
+            alert("Select a polygon before add or delete vertex")
+        } else if (models[selectedModel].type !== "polygon"){
+           alert("Sorry. Add and delete vertex tools are only for polygon shapes")
+        } else {
+            console.log(selectedModel, models[selectedModel]);
+            console.log(x, y);
+    
+            models[selectedModel].vertexCount++;
+            models[selectedModel].vertices.push(new Vertex(x, y, ''));
+            models[selectedModel].vertices[models[selectedModel].vertexCount-1].color = models[selectedModel].vertices[models[selectedModel].vertexCount-2].color 
+            drawAll();
+        }
+    }
+
     // Find the closest point to the mouse click
     var res = findClosestIndexes(x, y);
     selectedModel = res.i_closestModel;
@@ -128,27 +144,16 @@ function onMouseDown(event) {
     if (isColoring){
         models[selectedModel].vertices[selectedVertex].changeColorTo(currColorVal);
         drawAll();
-    } else if (isAddingVertex){
-        selectedModel = -1;
-        models.forEach(function(model, index){
-            if (model.type == "polygon"){
-                selectedModel = index;
-            } else {
-                alert("Sorry. Add and delete vertex tools are only for polygon shapes")
-            }
-        });
-
-        console.log(models[selectedModel]);
-        console.log(x, y);
-
-        models[selectedModel].vertexCount++;
-        models[selectedModel].vertices.push(new Vertex(x, y, ''));
-        models[selectedModel].vertices[models[selectedModel].vertexCount-1].color = models[selectedModel].vertices[models[selectedModel].vertexCount-2].color 
-        drawAll();
-    } else if (isDeletingVertex){
-        models[selectedModel].vertexCount--;
-        models[selectedModel].vertices.splice(selectedVertex, 1)
-        drawAll();
+    }  else if (isDeletingVertex){
+        if (selectedModel == -1){
+            alert("Select a polygon before add or delete vertex")
+        } else if (models[selectedModel].type !== 'polygon'){
+            alert("Sorry. Add and delete vertex tools are only for polygon shapes")
+        } else {
+            models[selectedModel].vertexCount--;
+            models[selectedModel].vertices.splice(selectedVertex, 1)
+            drawAll();
+        }
     } else{
         if (selectedModel !== -1) {
             isDragging = true;
@@ -370,10 +375,9 @@ function isPointInsidePolygon(model) {
 // Add vertex tool listener
 var isAddingVertex;
 addVertexButton.addEventListener("click", function(){
-    console.log("add bng")
+    console.log("add bng", selectedModel)
     addVertexButton.style.backgroundColor = "#ffffff"
     addVertexButton.style.color = "#525D64"
-    selectedShape = null;
     isColoring = false;
     isAddingVertex = true;
     isDeletingVertex = false;
