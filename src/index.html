@@ -46,6 +46,14 @@
                     <button id="add-vertex-button" class="add-vertex-button">Add vertex</button>
                     <button id="delete-vertex-button" class="delete-vertex-button">Delete vertex</button>
                 </div>
+                <div class="rotation-tool-container">
+                    <button id="rotation-button" class="rotation-button">Rotate shape</button>
+                    <input type="range" min="-180" max="180" value="0" class="rotation-slider" id="rotation-slider">
+                </div>
+                <div class="shear-x-tool-container">
+                    <button id="shear-x-button" class="shear-x-button">Shear x</button>
+                    <input type="range" min="-1.25" max="1.25" step="0.1" value="0" class="shear-x-slider" id="shear-x-slider">
+                </div>
                 <button id="clear-canvas-button" class="clear-canvas-button">Clear canvas</button>
             </div>
             <div class="import-save-container">
@@ -61,6 +69,8 @@
         <script src="vertex.js"></script>
         <script src="main.js"></script>
         <script src="listener.js"></script>
+        <script src="rotation.js"></script>
+        <script src="shear.js"></script>
         <script src="filehandler.js"></script>
         <script src="model.js"></script>
         <script src="line.js"></script>
