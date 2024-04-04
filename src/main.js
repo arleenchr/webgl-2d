@@ -22,10 +22,20 @@ var models = new Array();
 
 // DRAWING ALL SHAPES
 function drawAll(){
-    drawAllLines();
-    drawAllRect();
-    drawAllPolygons();
-    drawAllSquare();
+    models.forEach(function(element){
+        switch (element.type){
+            case 'line':
+                drawLine(element)
+                break
+            case 'rect':
+                drawRectangle(element)
+                break
+            case 'square':
+                drawRectangle(element)
+            case 'polygon':
+                drawPolygon(element)
+        }
+    })
 }
 
 // REMOVE ALL SHAPE LISTENERS
