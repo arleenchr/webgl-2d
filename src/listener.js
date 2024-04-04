@@ -233,7 +233,8 @@ function onTranslation(){
             }
         }
         else if (model.type == "polygon"){
-            console.log(isPointInsidePolygon(model));
+            selectedModel = index;
+            isDraggingShape = true;
         }
     });
     initialX = currX;
@@ -283,8 +284,17 @@ function isPointInsideSquare(model) {
     return (currX >= minX && currX <= maxX && currY >= minY && currY <= maxY);
 }
 
-function isPointInsidePolygon(vertices, x, y) {
-    
+function isPointInsidePolygon(model) {
+    var inside = false;
+    for (var i = 0, j = model.vertices.length - 1; i < model.vertices.length; j = i++) {
+        var xi = model.vertices[i].x, yi = model.vertices[i].y;
+        var xj = model.vertices[j].x, yj = model.vertices[j].y;
+        
+        var intersect = ((yi > currY) != (yj > currY))
+            && (currX < (xj - xi) * (currY - yi) / (yj - yi) + xi);
+        if (intersect) inside = !inside;
+    }
+    return inside;
 }
 
 // CLEAR CANVAS LISTENER
