@@ -34,6 +34,12 @@ shapeRadios.forEach(function(radio) {
             shearXButton.disabled = true;
             shearXSlider.style.backgroundColor = "#777f83"
             shearXSlider.disabled = true;
+            shearYButton.style.backgroundColor = "transparent"
+            shearYButton.style.color = "#8c959a"
+            shearYButton.style.borderColor = "#8c959a"
+            shearYButton.disabled = true;
+            shearYSlider.style.backgroundColor = "#777f83"
+            shearYSlider.disabled = true;
 
             canvas.removeEventListener('mousedown', onMouseDown);
             canvas.removeEventListener('mouseup', onMouseUp);
@@ -129,6 +135,12 @@ selectionToolButton.addEventListener("click", function(){
     shearXButton.disabled = true;
     shearXSlider.style.backgroundColor = "#777f83"
     shearXSlider.disabled = true;
+    shearYButton.style.backgroundColor = "transparent"
+    shearYButton.style.color = "#8c959a"
+    shearYButton.style.borderColor = "#8c959a"
+    shearYButton.disabled = true;
+    shearYSlider.style.backgroundColor = "#777f83"
+    shearYSlider.disabled = true;
     
     removeAllShapeListener();
     canvas.removeEventListener('mousedown', onTranslation);
@@ -313,14 +325,20 @@ selectShapeButton.addEventListener("click", function(){
     rotationButton.style.color = "#ffffff"
     rotationButton.style.borderColor = "#ffffff"
     rotationButton.disabled = false;
-    rotationSlider.style.backgroundColor = "#dbdee0"
+    rotationSlider.style.backgroundColor = "#777f83"
     rotationSlider.disabled = false;
     shearXButton.style.backgroundColor = "transparent"
     shearXButton.style.color = "#ffffff"
     shearXButton.style.borderColor = "#ffffff"
     shearXButton.disabled = false;
-    shearXSlider.style.backgroundColor = "#dbdee0"
+    shearXSlider.style.backgroundColor = "#777f83"
     shearXSlider.disabled = false;
+    shearYButton.style.backgroundColor = "transparent"
+    shearYButton.style.color = "#ffffff"
+    shearYButton.style.borderColor = "#ffffff"
+    shearYButton.disabled = false;
+    shearYSlider.style.backgroundColor = "#777f83"
+    shearYSlider.disabled = false;
 
     canvas.addEventListener('mousedown', onTranslation);
     canvas.addEventListener('mousemove', onTranslationDrag);
@@ -465,6 +483,19 @@ rotationButton.addEventListener("click", function(){
     console.log("rotate bng", selectedModel, rotationSlider.value)
     rotationButton.style.backgroundColor = "#ffffff"
     rotationButton.style.color = "#525D64"
+    rotationSlider.style.backgroundColor = "#dbdee0"
+    shearXButton.style.backgroundColor = "transparent"
+    shearXButton.style.color = "#ffffff"
+    shearXButton.style.borderColor = "#ffffff"
+    shearXButton.disabled = false;
+    shearXSlider.style.backgroundColor = "#777f83"
+    shearXSlider.disabled = false;
+    shearYButton.style.backgroundColor = "transparent"
+    shearYButton.style.color = "#ffffff"
+    shearYButton.style.borderColor = "#ffffff"
+    shearYButton.disabled = false;
+    shearYSlider.style.backgroundColor = "#777f83"
+    shearYSlider.disabled = false;
     rotationSlider.value = 0
     isColoring = false;
     isAddingVertex = false;
@@ -501,6 +532,19 @@ shearXButton.addEventListener("click", function(){
     console.log("shear x bng", selectedModel, shearXSlider.value)
     shearXButton.style.backgroundColor = "#ffffff"
     shearXButton.style.color = "#525D64"
+    shearXSlider.style.backgroundColor = "#dbdee0"
+    shearYButton.style.backgroundColor = "transparent"
+    shearYButton.style.color = "#ffffff"
+    shearYButton.style.borderColor = "#ffffff"
+    shearYButton.disabled = false;
+    shearYSlider.style.backgroundColor = "#777f83"
+    shearYSlider.disabled = false;
+    rotationButton.style.backgroundColor = "transparent"
+    rotationButton.style.color = "#ffffff"
+    rotationButton.style.borderColor = "#ffffff"
+    rotationButton.disabled = false;
+    rotationSlider.style.backgroundColor = "#777f83"
+    rotationSlider.disabled = false;
     isColoring = false;
     isAddingVertex = false;
     isDeletingVertex = false;
@@ -524,6 +568,56 @@ shearXSlider.addEventListener("change", function(){
     } else {
         shearXObject(models[selectedModel], shearXSlider.value - shearXValue)
         shearXValue = shearXSlider.value
+        drawAll()
+    }
+})
+
+// SHEAR Y BUTTON LISTENER
+var shearYValue = shearYSlider.value
+shearYButton.addEventListener("click", function(){
+    if (selectedModel == null || selectedModel == -1){
+        alert("Select a shape before shearing")
+    } 
+    console.log("shear y bng", selectedModel, shearYSlider.value)
+    shearYButton.style.backgroundColor = "#ffffff"
+    shearYButton.style.color = "#525D64"
+    shearYButton.style.borderColor = "#ffffff"
+    shearYSlider.style.backgroundColor = "#dbdee0"
+    shearXButton.style.backgroundColor = "transparent"
+    shearXButton.style.color = "#ffffff"
+    shearXButton.style.borderColor = "#ffffff"
+    shearXButton.disabled = false;
+    shearXSlider.style.backgroundColor = "#777f83"
+    shearXSlider.disabled = false;
+    rotationButton.style.backgroundColor = "transparent"
+    rotationButton.style.color = "#ffffff"
+    rotationButton.style.borderColor = "#ffffff"
+    rotationButton.disabled = false;
+    rotationSlider.style.backgroundColor = "#777f83"
+    rotationSlider.disabled = false;
+    isColoring = false;
+    isAddingVertex = false;
+    isDeletingVertex = false;
+    shapeRadios.forEach(function(radio) {
+      radio.checked = false;
+    });
+    deleteVertexButton.style.backgroundColor = "transparent"
+    deleteVertexButton.style.color = "#F75D5D"
+    removeAllShapeListener();
+    canvas.removeEventListener('mousedown', onTranslation);
+    canvas.removeEventListener('mousemove', onTranslationDrag);
+    canvas.removeEventListener('mouseup', onTranslationUp);
+    canvas.removeEventListener('mouseup', onMouseUp);
+    canvas.addEventListener('mousedown', onMouseDown);
+})
+
+shearYSlider.addEventListener("change", function(){
+    console.log(rotationSlider.value)
+    if (selectedModel == null || selectedModel == -1){
+        alert("Select a shape before shearing")
+    } else {
+        shearYObject(models[selectedModel], shearYSlider.value - shearYValue)
+        shearYValue = shearYSlider.value
         drawAll()
     }
 })
@@ -559,6 +653,12 @@ clearCanvasButton.addEventListener("click", function(){
     shearXButton.disabled = true;
     shearXSlider.style.backgroundColor = "#777f83"
     shearXSlider.disabled = true;
+    shearYButton.style.backgroundColor = "transparent"
+    shearYButton.style.color = "#8c959a"
+    shearYButton.style.borderColor = "#8c959a"
+    shearYButton.disabled = true;
+    shearYSlider.style.backgroundColor = "#777f83"
+    shearYSlider.disabled = true;
 });
 
 // SAVE BUTTON LISTENER
@@ -617,6 +717,13 @@ coloringToolButton.addEventListener('click', function(){
     shearXButton.disabled = true;
     shearXSlider.style.backgroundColor = "#777f83"
     shearXSlider.disabled = true;
+    shearYButton.style.backgroundColor = "transparent"
+    shearYButton.style.color = "#8c959a"
+    shearYButton.style.borderColor = "#8c959a"
+    shearYButton.disabled = true;
+    shearYSlider.style.backgroundColor = "#777f83"
+    shearYSlider.disabled = true;
+
     removeAllShapeListener();
     selectedShape = null;
     shapeRadios.forEach(function(radio) {
