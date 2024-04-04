@@ -299,8 +299,10 @@ function onTranslation(){
             }
         }
         else if (model.type == "polygon"){
-            selectedModel = index;
-            isDraggingShape = true;
+            if (isPointInsidePolygon(model)){
+                selectedModel = index;
+                isDraggingShape = true;
+            }
         }
     });
     initialX = currX;
