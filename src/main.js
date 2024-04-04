@@ -13,7 +13,7 @@ var rotationToolButton = document.getElementById("rotation-tool-button")
 // CURRENT SHAPE SELECTION
 var selectedShape;
 // CURRENT COLOR VALUE
-var currColorVal = colorPicker.value
+var currColorVal = colorPicker.value;
 
 var models = new Array();
 
