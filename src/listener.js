@@ -296,6 +296,114 @@ function isPointInsidePolygon(model) {
     }
     return inside;
 }
+//ROTATION HANDLER
+isRotating = false
+let initX, initY;
+rotationToolButton.addEventListener('click',function(){
+    selectedShape = null;
+    shapeRadios.forEach(function(radio) {
+      radio.checked = false;
+    });
+    removeAllShapeListener();
+    canvas.addEventListener('mousedown', onRotation);
+    canvas.addEventListener('mousemove', onRotationDrag);
+    canvas.addEventListener('mouseup', onRotationUp);
+})
+
+function onRotation(event){
+    // Convert mouse coordinates to WebGL coordinates
+    var rect = canvas.getBoundingClientRect();
+    var xPixel = event.clientX - rect.left;
+    var yPixel = event.clientY - rect.top;
+    var x = (xPixel / canvas.width) * 2 - 1;
+    var y = ((canvas.height - yPixel) / canvas.height) * 2 - 1;
+
+    init = event.clientX;
+    init = event.clientY;
+    // Find the closest point to the mouse click
+    var res = findClosestIndexes(x, y);
+    selectedModel = res.i_closestModel;
+    selectedVertex = res.i_closestVertex;
+    if (selectedModel !== -1) {
+        console.log(selectedModel)
+        console.log(selectedVertex)
+        isDragging = true;
+    }
+    if (selectedShape === null) {
+        isDragging = true;
+        initX = event.clientX;
+        initY = event.clientY;
+    }
+}
+
+function onRotationDrag(event){
+    // if selected model is line
+    var x_center, y_center;
+    if (isDragging && selectedModel != -1 && models[selectedModel].type == "line") {
+        x_center = (models[selectedModel].vertices[0].x + models[selectedModel].vertices[1].x)/2;
+        y_center = (models[selectedModel].vertices[0].y + models[selectedModel].vertices[1].y)/2;
+        console.log(models[selectedModel].vertices[0].x,models[selectedModel].vertices[1].x)
+        console.log(x_center,y_center)
+    }
+    else if (isDragging && selectedModel != -1 && models[selectedModel].type == "rect") {
+        x_center = (models[selectedModel].vertices[0].x + models[selectedModel].vertices[2].x)/2;
+        y_center = (models[selectedModel].vertices[0].y + models[selectedModel].vertices[2].y)/2;
+        
+    }
+    else if (isDragging && selectedModel != -1 && models[selectedModel].type == "square") {
+        x_center = (models[selectedModel].vertices[0].x + models[selectedModel].vertices[2].x)/2;
+        y_center = (models[selectedModel].vertices[0].y + models[selectedModel].vertices[2].y)/2;
+    }
+    else if (isDragging && selectedModel != -1 && models[selectedModel].type == "polygon") {
+        var x_max = models[selectedModel].vertices[0].x;
+        var x_min = models[selectedModel].vertices[0].x;
+        var y_max = models[selectedModel].vertices[0].y;
+        var y_min = models[selectedModel].vertices[0].y;
+        models[selectedModel].vertices.forEach(function(vertex,i_vertex){
+            if (vertex.x > x_max){
+                x_max = vertex.x
+            } else if (vertex.x < x_min){
+                x_min = vertex.x 
+            } else if (vertex.y > y_max){
+                y_max = vertex.x 
+            } else if (vertex.y < y_min){
+                y_min = vertex.y
+            }
+        })
+    }
+    const deltaX = event.clientX - initX;
+    const deltaY = event.clientY - initY;
+    const angle = Math.atan2(deltaY, deltaX);
+    console.log(angle)
+    const rotationMatrix = makeRotationMatrix(angle);
+    if (isDragging && selectedModel != -1){
+        models[selectedModel].vertices.forEach(function(element, index){
+            console.log("vertex")
+            console.log(index)
+            console.log("done")
+            models[selectedModel].vertices[index].x += (rotationMatrix[0] * models[selectedModel].vertices[index].x + rotationMatrix[1] * models[selectedModel].vertices[index].y)/600;
+            models[selectedModel].vertices[index].y += (rotationMatrix[4] * models[selectedModel].vertices[index].x + rotationMatrix[5] * models[selectedModel].vertices[index].y)/600;
+        });
+    }
+    drawAll();
+}
+
+function onRotationUp(event){
+    isDragging = false;
+    drawAll();
+}
+
+function makeRotationMatrix(angle) {
+    const cos = Math.cos(angle);
+    const sin = Math.sin(angle);
+    
+    return [
+        cos, -sin, 0, 0,
+        sin, cos, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1
+    ];
+}
 
 // CLEAR CANVAS LISTENER
 clearCanvasButton.addEventListener("click", function(){
