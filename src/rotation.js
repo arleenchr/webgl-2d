@@ -10,12 +10,11 @@ function makeRotationMatrix(angle) {
     ];
 }
 
-// Fungsi untuk merotasi persegi
 function rotateObject(element, angle) {
-    // Mendapatkan matriks rotasi
+    angle *= Math.PI / 180
     const rotationMatrix = makeRotationMatrix(angle);
 
-    // Menemukan pusat bentuk
+    // center of shape
     let centerX = 0;
     let centerY = 0;
     for (let i = 0; i < element.vertices.length; i++) {
@@ -25,29 +24,32 @@ function rotateObject(element, angle) {
     centerX /= element.vertices.length;
     centerY /= element.vertices.length;
 
-    // Menerapkan translasi ke pusat bentuk
+    // translation to center of shape
     for (let i = 0; i < element.vertices.length; i++) {
         element.vertices[i].x -= centerX;
         element.vertices[i].y -= centerY;
     }
 
-    // Menerapkan matriks rotasi pada matriks model
+    // rotate
     for (let i = 0; i < element.vertices.length; i++) {
         const vertex = element.vertices[i];
         const x = vertex.x;
         const y = vertex.y;
-        // Mengalikan posisi setiap vertex dengan matriks rotasi
-        vertex.x = rotationMatrix[0] * x + rotationMatrix[1] * y;
-        vertex.y = rotationMatrix[4] * x + rotationMatrix[5] * y;
+        vertex.x = (x * Math.cos(angle) - y * Math.sin(angle)) * (1000/625);
+        vertex.y = (x * Math.sin(angle) + y * Math.cos(angle)) * (1000/625);
+        // vertex.x = (rotationMatrix[0] * x + rotationMatrix[1] * y) * (625/1000);
+        // vertex.y = (rotationMatrix[4] * x + rotationMatrix[5] * y) * (625/1000);
     }
 
-    // Menerapkan translasi balik ke pusat bentuk
+    // translation to center of shape
     for (let i = 0; i < element.vertices.length; i++) {
+        element.vertices[i].x /= (1000/625);
+        element.vertices[i].y /= (1000/625);
         element.vertices[i].x += centerX;
         element.vertices[i].y += centerY;
     }
 
-    // Menggambar persegi yang sudah dirotasi
+    // draw
     if (element.type == 'line'){
         drawLine(element);
     } else if (element.type == 'rect'){

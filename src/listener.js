@@ -441,6 +441,9 @@ deleteVertexButton.addEventListener("click", function(){
 
 // ROTATION BUTTON LISTENER
 rotationButton.addEventListener("click", function(){
+    if (selectedModel == null || selectedModel == -1){
+        alert("Select a shape before rotating")
+    } 
     console.log("rotate bng", selectedModel, rotationSlider.value)
     rotationButton.style.backgroundColor = "#ffffff"
     rotationButton.style.color = "#525D64"
@@ -464,7 +467,7 @@ rotationButton.addEventListener("click", function(){
 rotationSlider.addEventListener("change", function(){
     console.log(rotationSlider.value)
     if (selectedModel == null || selectedModel == -1){
-        alert("Select a polygon before add or delete vertex")
+        alert("Select a shape before rotating")
     } else {
         rotateObject(models[selectedModel], rotationSlider.value)
         drawAll()
